@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="WebProbaPeraPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>ru.nosov.server.db.tables.Addresses</class>
+    <class>ru.nosov.server.db.tables.UsersTypes</class>
+    <class>ru.nosov.server.db.tables.Departments</class>
+    <class>ru.nosov.server.db.tables.Users</class>
+    <class>ru.nosov.server.db.tables.Jobs</class>
+    <class>ru.nosov.server.db.tables.AddressesTypes</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://192.168.0.2:3306/mydbProbaPera?zeroDateTimeBehavior=convertToNull"/>
+      <property name="javax.persistence.jdbc.password" value="nosov"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.user" value="nosov"/>
+    </properties>
+  </persistence-unit>
+</persistence>
