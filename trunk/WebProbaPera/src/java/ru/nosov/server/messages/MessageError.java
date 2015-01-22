@@ -4,14 +4,14 @@
  */
 package ru.nosov.server.messages;
 
-import ru.nosov.client.messages.AMessage;
+import ru.nosov.client.messages.Message;
 import ru.nosov.client.messages.types.TypeMessage;
 
 /**
  * Сообщение об ошибке в канале.
  * @author Носов А.В.
  */
-public class MessageError extends AMessage {
+public class MessageError extends Message {
 
     // Variables declaration
     /** Код ошибки. */

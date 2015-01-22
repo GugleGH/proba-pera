@@ -23,10 +23,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
-import ru.nosov.client.messages.IMessageFactory;
-import ru.nosov.client.messages.MessageService;
-import ru.nosov.client.messages.MessageServiceAsync;
-import ru.nosov.client.messages.tx.IMessageLogin;
+import ru.nosov.client.messages.Message;
+import ru.nosov.client.messages.MsgService;
+import ru.nosov.client.messages.MsgServiceAsync;
+import ru.nosov.client.messages.tx.MessageLoginT;
 import ru.nosov.client.messages.types.TypeMessage;
 
 /**
@@ -37,10 +37,11 @@ import ru.nosov.client.messages.types.TypeMessage;
  * 3. Переложить все на Apache и закрыться полностью https.
  * @author Носов А.В.
  */
-public class PanelLogin extends SimplePanel implements AsyncCallback<String> {
+//public class PanelLogin extends SimplePanel implements AsyncCallback<String> {
+public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
     
     // Variables declaration
-    private MessageServiceAsync messageService = GWT.create(MessageService.class);
+    private MsgServiceAsync msgService = GWT.create(MsgService.class);
     
     private VerticalPanel verticalPanel;
     /** Название панели. */
@@ -93,9 +94,9 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<String> {
         verticalPanel.add(textBoxPass);
         verticalPanel.add(buttonInput);
         
-        ServiceDefTarget endpoint = (ServiceDefTarget) messageService;
-        String moduleRelativeURL = "/WebProbaPera/ru_nosov_server/messageServiceImpl";
-        endpoint.setServiceEntryPoint(moduleRelativeURL);
+        ServiceDefTarget endpointMsg = (ServiceDefTarget) msgService;
+        String urlMsg = "/WebProbaPera/ru_nosov_server/msgServiceImpl";
+        endpointMsg.setServiceEntryPoint(urlMsg);
         
         this.add(verticalPanel);
     }
@@ -107,16 +108,15 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<String> {
         if (!validateLogin()) return;
         if (!validatePassword()) return;
         
-        final IMessageFactory beanFactory = GWT.create(IMessageFactory.class);
-        AutoBean<IMessageLogin> message = beanFactory.messageLogin();
-        IMessageLogin msgLogin = message.as();
-        msgLogin.setTypeMessage(TypeMessage.Login);
-        msgLogin.setLogin(textBoxLogin.getText());
-        msgLogin.setPassword(textBoxPass.getText());
-        AutoBean<IMessageLogin> bean = AutoBeanUtils.getAutoBean(msgLogin);
-        String msg = AutoBeanCodex.encode(bean).getPayload();
-        
-        messageService.getMessage(msg, this);
+        MessageLoginT msgT = new MessageLoginT();
+        msgT.setTypeMessage(TypeMessage.Login);
+        msgT.setLogin(textBoxLogin.getText());
+        msgT.setPassword(textBoxPass.getText());
+        if (msgT instanceof Message) {
+            msgService.getMsg((Message)msgT, this);
+        } else {
+            Window.alert("Не смог!");
+        }
     }
     
     /**
@@ -138,14 +138,22 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<String> {
     }
     
     @Override
-    public void onFailure(Throwable caught) {
-        /* server side error occured */
-        //Window.alert("Unable to obtain server response: " + caught.getMessage());	
+    public void onFailure(Throwable caught) {	
         Window.alert("PanelLogin no response");	
     }
     @Override
-    public void onSuccess(String result) {
-        /* server returned result, show user the message */
-        Window.alert("PanelLogin: " + result);
+    public void onSuccess(Message result) {
+        if (result == null) {
+            Window.alert("PanelLogin: NULL");
+            return;
+        }
+        TypeMessage tm = result.getTypeMessage();
+        switch (tm) {
+            case Login:
+                MessageLoginT login = (MessageLoginT) result;
+                Window.alert("PanelLogin LOGIN:" + login.getLogin()+
+                        ";\nPASS:" + login.getPassword() + ";");
+                break;
+        }
     }
 }
