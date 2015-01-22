@@ -8,14 +8,14 @@ package ru.nosov.client.messages;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-@RemoteServiceRelativePath("msgServiceImpl")
-public interface MsgService extends RemoteService {
+@RemoteServiceRelativePath("messageServiceImpl")
+public interface MessageService extends RemoteService {
     
     /**
      * Возвращает сообщение от сервера к клиенту
      * @param msg сообщение от клиента к серверу
      * @return сообщение от сервера к клиенту
      */
-    public Message getMsg(Message msg);
+    public Message getMessage(Message msg);
     
 }

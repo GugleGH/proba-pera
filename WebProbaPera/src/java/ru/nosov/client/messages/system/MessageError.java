@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package ru.nosov.server.messages;
+package ru.nosov.client.messages.system;
 
 import ru.nosov.client.messages.Message;
 import ru.nosov.client.messages.types.TypeMessage;

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package ru.nosov.client.messages.tx;
+package ru.nosov.client.messages.system;
 
 import ru.nosov.client.messages.Message;
 import ru.nosov.client.messages.types.TypeMessage;
@@ -11,7 +11,8 @@ import ru.nosov.client.messages.types.TypeMessage;
  * Сообщение авторизации.
  * @author Носов А.В.
  */
-public class MessageLoginT extends Message {
+public class MessageLogin extends Message {
+    
     // Variables declaration
     /** Имя. */
     private String login;
@@ -19,7 +20,7 @@ public class MessageLoginT extends Message {
     private String password;
     // End of variables declaration
 
-    public MessageLoginT() {
+    public MessageLogin() {
         setTypeMessage(TypeMessage.Login);
     }
 
