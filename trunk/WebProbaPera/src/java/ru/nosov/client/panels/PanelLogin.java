@@ -20,13 +20,11 @@ import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import ru.nosov.client.messages.Message;
-import ru.nosov.client.messages.MsgService;
-import ru.nosov.client.messages.MsgServiceAsync;
-import ru.nosov.client.messages.tx.MessageLoginT;
+import ru.nosov.client.messages.MessageService;
+import ru.nosov.client.messages.MessageServiceAsync;
+import ru.nosov.client.messages.system.MessageError;
+import ru.nosov.client.messages.system.MessageLogin;
 import ru.nosov.client.messages.types.TypeMessage;
 
 /**
@@ -41,7 +39,7 @@ import ru.nosov.client.messages.types.TypeMessage;
 public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
     
     // Variables declaration
-    private MsgServiceAsync msgService = GWT.create(MsgService.class);
+    private MessageServiceAsync msgService = GWT.create(MessageService.class);
     
     private VerticalPanel verticalPanel;
     /** Название панели. */
@@ -95,7 +93,7 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
         verticalPanel.add(buttonInput);
         
         ServiceDefTarget endpointMsg = (ServiceDefTarget) msgService;
-        String urlMsg = "/WebProbaPera/ru_nosov_server/msgServiceImpl";
+        String urlMsg = "/WebProbaPera/ru_nosov_server_services/messageServiceImpl";
         endpointMsg.setServiceEntryPoint(urlMsg);
         
         this.add(verticalPanel);
@@ -108,12 +106,12 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
         if (!validateLogin()) return;
         if (!validatePassword()) return;
         
-        MessageLoginT msgT = new MessageLoginT();
+        MessageLogin msgT = new MessageLogin();
         msgT.setTypeMessage(TypeMessage.Login);
         msgT.setLogin(textBoxLogin.getText());
         msgT.setPassword(textBoxPass.getText());
         if (msgT instanceof Message) {
-            msgService.getMsg((Message)msgT, this);
+            msgService.getMessage((Message)msgT, this);
         } else {
             Window.alert("Не смог!");
         }
@@ -121,7 +119,7 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
     
     /**
      * Проверка корректности ввода логина.
-     * @return <b>true</b> - верно, <br></br>
+     * @return <b>true</b> - верно, <br>
      * <b>false</b> - не верно.
      */
     public boolean validateLogin() {
@@ -130,7 +128,7 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
     
     /**
      * Проверка корректности ввода пароля.
-     * @return <b>true</b> - верно, <br></br>
+     * @return <b>true</b> - верно, <br>
      * <b>false</b> - не верно.
      */
     public boolean validatePassword() {
@@ -150,9 +148,16 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
         TypeMessage tm = result.getTypeMessage();
         switch (tm) {
             case Login:
-                MessageLoginT login = (MessageLoginT) result;
-                Window.alert("PanelLogin LOGIN:" + login.getLogin()+
-                        ";\nPASS:" + login.getPassword() + ";");
+                MessageLogin login = (MessageLogin) result;
+                Window.alert("PanelLogin\n"
+                        + "LOGIN:" + login.getLogin() + ";\n"
+                        + "PASS:" + login.getPassword() + ";");
+                break;
+            case Error:
+                MessageError error = (MessageError) result;
+                Window.alert("PanelLogin\n"
+                        + "CODE:" + error.getCode() + ";\n"
+                        + "DESC:" + error.getDescription() + ";");
                 break;
         }
     }
