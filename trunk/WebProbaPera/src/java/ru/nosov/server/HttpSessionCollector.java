@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 public class HttpSessionCollector implements HttpSessionListener {
     
     // Variables declaration
-    private static final Logger log = Logger.getLogger(HttpSessionListener.class);
+    private static final Logger log = Logger.getLogger(HttpSessionCollector.class);
     /** Список активных сессий. */
     private static final Map<String, HttpSession> sessions = new HashMap<String, HttpSession>();
     // End of variables declaration
@@ -34,7 +34,8 @@ public class HttpSessionCollector implements HttpSessionListener {
     public void sessionCreated(HttpSessionEvent event) {
         HttpSession session = event.getSession();
         sessions.put(session.getId(), session);
-        log.debug("Add new session. ID = " + session.getId());
+        log.debug("Created new session. ID = " + session.getId() + "; "
+                + "MaxInterval: " + session.getMaxInactiveInterval());
     }
 
     @Override
@@ -48,8 +49,11 @@ public class HttpSessionCollector implements HttpSessionListener {
      * @param httpSession сессия
      */
     public static void addSession(HttpSession httpSession) {
-        if (!isInRange(httpSession.getId()))
+        if (!isInRange(httpSession.getId())) {
             sessions.put(httpSession.getId(), httpSession);
+            log.debug("Add session. ID = " + httpSession.getId() + "; "
+                    + "MaxInterval: " + httpSession.getMaxInactiveInterval());
+        }
     }
     
     /**

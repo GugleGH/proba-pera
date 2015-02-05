@@ -23,19 +23,20 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import ru.nosov.client.messages.Message;
 import ru.nosov.client.messages.MessageService;
 import ru.nosov.client.messages.MessageServiceAsync;
+import ru.nosov.client.messages.db.Users;
 import ru.nosov.client.messages.system.MessageError;
-import ru.nosov.client.messages.system.MessageLogin;
 import ru.nosov.client.messages.types.TypeMessage;
+import ru.nosov.client.utils.Utils;
 
 /**
  * Панель входа в систему.
+ * http://ru.enetri.com/2010/05/18/1.html
  * Как защитить пароль:
  * 1. Использовать GoogleAcountAPI
  * 2. com.googlecode.gwt.crypto.Crypto (Заранее прописать ключи у клиента и сервера)
  * 3. Переложить все на Apache и закрыться полностью https.
  * @author Носов А.В.
  */
-//public class PanelLogin extends SimplePanel implements AsyncCallback<String> {
 public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
     
     // Variables declaration
@@ -103,36 +104,18 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
      * Авторизация.
      */
     private void loginig() {
-        if (!validateLogin()) return;
-        if (!validatePassword()) return;
+        if (!Utils.validateLogin(textBoxLogin.getText())) return;
+        if (!Utils.validatePassword(textBoxPass.getText())) return;
         
-        MessageLogin msgT = new MessageLogin();
-        msgT.setTypeMessage(TypeMessage.Login);
-        msgT.setLogin(textBoxLogin.getText());
-        msgT.setPassword(textBoxPass.getText());
-        if (msgT instanceof Message) {
-            msgService.getMessage((Message)msgT, this);
+        Users msgLogin = new Users();
+//        msgLogin.setTypeMessage(TypeMessage.Login);
+        msgLogin.setNicname(textBoxLogin.getText());
+        msgLogin.setPassword(textBoxPass.getText());
+        if (msgLogin instanceof Message) {
+            msgService.getMessage((Message)msgLogin, this);
         } else {
             Window.alert("Не смог!");
         }
-    }
-    
-    /**
-     * Проверка корректности ввода логина.
-     * @return <b>true</b> - верно, <br>
-     * <b>false</b> - не верно.
-     */
-    public boolean validateLogin() {
-        return textBoxLogin.getText().trim().length() >= 3;
-    }
-    
-    /**
-     * Проверка корректности ввода пароля.
-     * @return <b>true</b> - верно, <br>
-     * <b>false</b> - не верно.
-     */
-    public boolean validatePassword() {
-        return textBoxPass.getText().trim().length() >= 3;
     }
     
     @Override
@@ -148,10 +131,6 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
         TypeMessage tm = result.getTypeMessage();
         switch (tm) {
             case Login:
-                MessageLogin login = (MessageLogin) result;
-                Window.alert("PanelLogin\n"
-                        + "LOGIN:" + login.getLogin() + ";\n"
-                        + "PASS:" + login.getPassword() + ";");
                 break;
             case Error:
                 MessageError error = (MessageError) result;

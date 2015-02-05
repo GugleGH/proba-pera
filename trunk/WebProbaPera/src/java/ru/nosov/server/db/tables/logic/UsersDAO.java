@@ -7,7 +7,7 @@ package ru.nosov.server.db.tables.logic;
 
 import java.sql.SQLException;
 import java.util.Collection;
-import ru.nosov.server.db.tables.Users;
+import ru.nosov.client.messages.db.Users;
 
 /**
  * Набор функций для взаимодействия с таблицей Users.
