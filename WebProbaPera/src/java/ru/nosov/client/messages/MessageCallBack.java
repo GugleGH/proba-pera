@@ -3,26 +3,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ru.nosov.client;
+package ru.nosov.client.messages;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import ru.nosov.client.messages.Message;
 
 /**
- *
- * @author nosov
+ * Асинхронная передача сообщения.
+ * Нигде не используется.
+ * @author Носов А.В.
  */
-public class MessageCallBack implements AsyncCallback<String> {
+public class MessageCallBack implements AsyncCallback<Message> {
       
     @Override
     public void onFailure(Throwable caught) {
-        /* server side error occured */
-        //Window.alert("Unable to obtain server response: " + caught.getMessage());	
         Window.alert("MessageCallBack no response");	
     }
     @Override
-    public void onSuccess(String result) {
-        /* server returned result, show user the message */
+    public void onSuccess(Message result) {
         Window.alert("MessageCallBack\n" + result);
     }	   
 }

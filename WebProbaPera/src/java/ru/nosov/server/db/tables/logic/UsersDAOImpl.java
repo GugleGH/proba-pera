@@ -11,8 +11,8 @@ import java.util.Collection;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
+import ru.nosov.client.messages.db.Users;
 import ru.nosov.server.db.HibernateSessionFactory;
-import ru.nosov.server.db.tables.Users;
 
 /**
  * Реализация методов для взаимодейсвия таблицы Users с БД.

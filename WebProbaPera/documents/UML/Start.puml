@@ -1,0 +1,17 @@
+@startuml
+
+(*) --> [Пользователь открыл сайт] "Аутентификация"
+note left: Запрос MessageUser
+
+if "session.isNew()" then
+    --> [true] "Новая сессия"
+else
+    --> [false] === isAuthentication ===
+endif
+
+"Новая сессия" --> === End === 
+"Страница настроек" --> === End === 
+
+=== End === --> [Пользователь ушел со страницы](*)
+
+@enduml

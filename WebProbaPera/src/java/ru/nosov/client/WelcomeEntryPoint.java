@@ -7,6 +7,7 @@ package ru.nosov.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.RootPanel;
+import ru.nosov.client.panels.PanelCreateAcount;
 import ru.nosov.client.panels.PanelLogin;
 
 /**
@@ -32,6 +33,7 @@ public class WelcomeEntryPoint implements EntryPoint {
      */
     @Override
     public void onModuleLoad() {
-        RootPanel.get().add(new PanelLogin());
+        RootPanel.get().add(new PanelCreateAcount());
+        //RootPanel.get().add(new PanelLogin());
     }
 }
