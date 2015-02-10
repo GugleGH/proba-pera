@@ -1,0 +1,110 @@
+16:10:17,981 ERROR main UsersDAOImpl:getAllUsers:34 - Сессия открыта.
+16:10:34,157 ERROR main UsersDAOImpl:getAllUsers:44 - Достали:0
+16:14:32,080 ERROR main UsersDAOImpl:getAllUsers:34 - Сессия открыта.
+16:14:48,222 ERROR main UsersDAOImpl:getAllUsers:52 - Error in getAllUsers
+org.hibernate.MappingException: Named query not known: Users.findAll
+	at org.hibernate.internal.AbstractSessionImpl.getNamedQuery(AbstractSessionImpl.java:177)
+	at org.hibernate.internal.SessionImpl.getNamedQuery(SessionImpl.java:1368)
+	at ru.nosov.server.db.tables.logic.UsersDAOImpl.getAllUsers(UsersDAOImpl.java:44)
+	at ru.nosov.server.db.TestBD.main(TestBD.java:22)
+16:17:19,153 ERROR main UsersDAOImpl:getAllUsers:34 - Сессия открыта.
+16:17:35,346 ERROR main HibernateSessionFactory:<clinit>:33 - Initial HibernateSessionFactory creation failed. 
+org.hibernate.AnnotationException: @OneToOne or @ManyToOne on ru.nosov.server.db.tables.Users.usersTypesId references an unknown entity: ru.nosov.client.messages.db.UsersTypes
+	at org.hibernate.cfg.ToOneFkSecondPass.doSecondPass(ToOneFkSecondPass.java:109)
+	at org.hibernate.cfg.Configuration.processEndOfQueue(Configuration.java:1596)
+	at org.hibernate.cfg.Configuration.processFkSecondPassInOrder(Configuration.java:1519)
+	at org.hibernate.cfg.Configuration.secondPassCompile(Configuration.java:1420)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:1844)
+	at ru.nosov.server.db.HibernateSessionFactory.<clinit>(HibernateSessionFactory.java:31)
+	at ru.nosov.server.db.tables.logic.UsersDAOImpl.getAllUsers(UsersDAOImpl.java:35)
+	at ru.nosov.server.db.TestBD.main(TestBD.java:22)
+16:26:47,811 ERROR main UsersDAOImpl:getAllUsers:34 - Сессия открыта.
+16:27:04,002 ERROR main UsersDAOImpl:getAllUsers:52 - Error in getAllUsers
+org.hibernate.hql.internal.ast.QuerySyntaxException: Users is not mapped [SELECT u FROM Users u]
+	at org.hibernate.hql.internal.ast.QuerySyntaxException.generateQueryException(QuerySyntaxException.java:96)
+	at org.hibernate.QueryException.wrapWithQueryString(QueryException.java:120)
+	at org.hibernate.hql.internal.ast.QueryTranslatorImpl.doCompile(QueryTranslatorImpl.java:234)
+	at org.hibernate.hql.internal.ast.QueryTranslatorImpl.compile(QueryTranslatorImpl.java:158)
+	at org.hibernate.engine.query.spi.HQLQueryPlan.<init>(HQLQueryPlan.java:126)
+	at org.hibernate.engine.query.spi.HQLQueryPlan.<init>(HQLQueryPlan.java:88)
+	at org.hibernate.engine.query.spi.QueryPlanCache.getHQLQueryPlan(QueryPlanCache.java:190)
+	at org.hibernate.internal.AbstractSessionImpl.getHQLQueryPlan(AbstractSessionImpl.java:301)
+	at org.hibernate.internal.AbstractSessionImpl.createQuery(AbstractSessionImpl.java:236)
+	at org.hibernate.internal.SessionImpl.createQuery(SessionImpl.java:1796)
+	at ru.nosov.server.db.tables.logic.UsersDAOImpl.getAllUsers(UsersDAOImpl.java:36)
+	at ru.nosov.server.db.TestBD.main(TestBD.java:22)
+Caused by: org.hibernate.hql.internal.ast.QuerySyntaxException: Users is not mapped
+	at org.hibernate.hql.internal.ast.util.SessionFactoryHelper.requireClassPersister(SessionFactoryHelper.java:189)
+	at org.hibernate.hql.internal.ast.tree.FromElementFactory.addFromElement(FromElementFactory.java:109)
+	at org.hibernate.hql.internal.ast.tree.FromClause.addFromElement(FromClause.java:95)
+	at org.hibernate.hql.internal.ast.HqlSqlWalker.createFromElement(HqlSqlWalker.java:331)
+	at org.hibernate.hql.internal.antlr.HqlSqlBaseWalker.fromElement(HqlSqlBaseWalker.java:3633)
+	at org.hibernate.hql.internal.antlr.HqlSqlBaseWalker.fromElementList(HqlSqlBaseWalker.java:3522)
+	at org.hibernate.hql.internal.antlr.HqlSqlBaseWalker.fromClause(HqlSqlBaseWalker.java:706)
+	at org.hibernate.hql.internal.antlr.HqlSqlBaseWalker.query(HqlSqlBaseWalker.java:562)
+	at org.hibernate.hql.internal.antlr.HqlSqlBaseWalker.selectStatement(HqlSqlBaseWalker.java:299)
+	at org.hibernate.hql.internal.antlr.HqlSqlBaseWalker.statement(HqlSqlBaseWalker.java:247)
+	at org.hibernate.hql.internal.ast.QueryTranslatorImpl.analyze(QueryTranslatorImpl.java:278)
+	at org.hibernate.hql.internal.ast.QueryTranslatorImpl.doCompile(QueryTranslatorImpl.java:206)
+	... 9 more
+16:27:50,000 ERROR main UsersDAOImpl:getAllUsers:34 - Сессия открыта.
+16:28:06,139 ERROR main HibernateSessionFactory:<clinit>:33 - Initial HibernateSessionFactory creation failed. 
+org.hibernate.AnnotationException: @OneToOne or @ManyToOne on ru.nosov.server.db.tables.Users.usersTypesId references an unknown entity: ru.nosov.client.messages.db.UsersTypes
+	at org.hibernate.cfg.ToOneFkSecondPass.doSecondPass(ToOneFkSecondPass.java:109)
+	at org.hibernate.cfg.Configuration.processEndOfQueue(Configuration.java:1596)
+	at org.hibernate.cfg.Configuration.processFkSecondPassInOrder(Configuration.java:1519)
+	at org.hibernate.cfg.Configuration.secondPassCompile(Configuration.java:1420)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:1844)
+	at ru.nosov.server.db.HibernateSessionFactory.<clinit>(HibernateSessionFactory.java:31)
+	at ru.nosov.server.db.tables.logic.UsersDAOImpl.getAllUsers(UsersDAOImpl.java:35)
+	at ru.nosov.server.db.TestBD.main(TestBD.java:22)
+16:30:47,867 ERROR main UsersDAOImpl:getAllUsers:34 - Сессия открыта.
+16:31:04,020 ERROR main HibernateSessionFactory:<clinit>:33 - Initial HibernateSessionFactory creation failed. 
+org.hibernate.AnnotationException: Use of @OneToMany or @ManyToMany targeting an unmapped class: ru.nosov.server.db.tables.Users.addressesCollection[ru.nosov.client.messages.db.Addresses]
+	at org.hibernate.cfg.annotations.CollectionBinder.bindManyToManySecondPass(CollectionBinder.java:1134)
+	at org.hibernate.cfg.annotations.CollectionBinder.bindStarToManySecondPass(CollectionBinder.java:793)
+	at org.hibernate.cfg.annotations.CollectionBinder$1.secondPass(CollectionBinder.java:728)
+	at org.hibernate.cfg.CollectionSecondPass.doSecondPass(CollectionSecondPass.java:70)
+	at org.hibernate.cfg.Configuration.originalSecondPassCompile(Configuration.java:1695)
+	at org.hibernate.cfg.Configuration.secondPassCompile(Configuration.java:1424)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:1844)
+	at ru.nosov.server.db.HibernateSessionFactory.<clinit>(HibernateSessionFactory.java:31)
+	at ru.nosov.server.db.tables.logic.UsersDAOImpl.getAllUsers(UsersDAOImpl.java:35)
+	at ru.nosov.server.db.TestBD.main(TestBD.java:22)
+16:33:39,642 ERROR main UsersDAOImpl:getAllUsers:34 - Сессия открыта.
+16:33:55,805 ERROR main HibernateSessionFactory:<clinit>:33 - Initial HibernateSessionFactory creation failed. 
+org.hibernate.AnnotationException: @OneToOne or @ManyToOne on ru.nosov.client.messages.db.Addresses.usersId references an unknown entity: ru.nosov.client.messages.db.UsersV2
+	at org.hibernate.cfg.ToOneFkSecondPass.doSecondPass(ToOneFkSecondPass.java:109)
+	at org.hibernate.cfg.Configuration.processEndOfQueue(Configuration.java:1596)
+	at org.hibernate.cfg.Configuration.processFkSecondPassInOrder(Configuration.java:1519)
+	at org.hibernate.cfg.Configuration.secondPassCompile(Configuration.java:1420)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:1844)
+	at ru.nosov.server.db.HibernateSessionFactory.<clinit>(HibernateSessionFactory.java:31)
+	at ru.nosov.server.db.tables.logic.UsersDAOImpl.getAllUsers(UsersDAOImpl.java:35)
+	at ru.nosov.server.db.TestBD.main(TestBD.java:22)
+16:35:21,389 ERROR main UsersDAOImpl:getAllUsers:33 - Сессия открыта.
+16:35:21,708 ERROR main HibernateSessionFactory:<clinit>:33 - Initial HibernateSessionFactory creation failed. 
+org.hibernate.MappingException: Unable to load class [ ru.nosov.server.db.tables.Users] declared in Hibernate configuration <mapping/> entry
+	at org.hibernate.cfg.Configuration.parseMappingElement(Configuration.java:2279)
+	at org.hibernate.cfg.Configuration.parseSessionFactory(Configuration.java:2227)
+	at org.hibernate.cfg.Configuration.doConfigure(Configuration.java:2207)
+	at org.hibernate.cfg.Configuration.doConfigure(Configuration.java:2160)
+	at org.hibernate.cfg.Configuration.configure(Configuration.java:2075)
+	at ru.nosov.server.db.HibernateSessionFactory.<clinit>(HibernateSessionFactory.java:28)
+	at ru.nosov.server.db.tables.logic.UsersDAOImpl.getAllUsers(UsersDAOImpl.java:34)
+	at ru.nosov.server.db.TestBD.main(TestBD.java:22)
+Caused by: java.lang.ClassNotFoundException: ru.nosov.server.db.tables.Users
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:190)
+	at org.hibernate.internal.util.ReflectHelper.classForName(ReflectHelper.java:193)
+	at org.hibernate.cfg.Configuration.parseMappingElement(Configuration.java:2276)
+	... 7 more
+16:36:13,570 ERROR main UsersDAOImpl:getAllUsers:33 - Сессия открыта.
+16:36:30,393 ERROR main UsersDAOImpl:getAllUsers:49 - Criteria:1

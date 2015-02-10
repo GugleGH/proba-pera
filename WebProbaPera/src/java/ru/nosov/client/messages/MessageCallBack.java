@@ -7,7 +7,6 @@ package ru.nosov.client.messages;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import ru.nosov.client.messages.Message;
 
 /**
  * Асинхронная передача сообщения.

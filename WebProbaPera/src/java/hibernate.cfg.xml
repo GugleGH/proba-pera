@@ -7,5 +7,14 @@
     <property name="hibernate.connection.url">jdbc:mysql://192.168.0.2:3306/mydbProbaPera?zeroDateTimeBehavior=convertToNull</property>
     <property name="hibernate.connection.username">nosov</property>
     <property name="hibernate.connection.password">nosov</property>
+    <!--<property name="l/p">root/admin</property>-->
+    
+    <mapping class="ru.nosov.client.messages.db.Addresses"/>
+    <mapping class="ru.nosov.client.messages.db.AddressesTypes"/>
+    <mapping class="ru.nosov.client.messages.db.Departments"/>
+    <mapping class="ru.nosov.client.messages.db.Jobs"/>
+    <mapping class="ru.nosov.client.messages.db.Users"/>
+    <mapping class="ru.nosov.client.messages.db.UsersTypes"/>
+    
   </session-factory>
 </hibernate-configuration>

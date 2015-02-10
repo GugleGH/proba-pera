@@ -5,18 +5,19 @@
  */
 package ru.nosov.server.services;
 
-import com.google.gson.Gson;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import java.util.Date;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Iterator;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 import ru.nosov.client.messages.Message;
 import ru.nosov.client.messages.MessageService;
 import ru.nosov.client.messages.db.Users;
 import ru.nosov.client.messages.system.MessageError;
-import ru.nosov.client.messages.system.MessageLoginInfo;
 import ru.nosov.client.messages.types.TypeMessage;
-import ru.nosov.server.HttpSessionCollector;
+import ru.nosov.server.db.HibernateFactory;
 import ru.nosov.server.exceptions.errors.ErrorsMessage;
 
 public class MessageServiceImpl extends RemoteServiceServlet implements MessageService {
@@ -32,18 +33,8 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
         if ( (msg == null) || (msg.getTypeMessage() == null) ) tm = TypeMessage.Error;
         else tm = msg.getTypeMessage();
         
-        if (log.isDebugEnabled()) {
+        if (log.isDebugEnabled())
             log.debug("Тип входящего :"+ tm.name());
-//            String str = new Gson().toJson(msg, Message.class);
-//            log.debug("Сообщение " + str);
-        }
-        
-        // 1. Если сессия новая, то неважно что там за запрос отправляем на страницу авторизации
-        // 2. Проверяем есть ли авторизация
-        // 2.1 Есть, открываем главную страницу
-        // 2.2 Нет, проверяем что это страница регистрации
-        // 2.2.1 Да, проводим регистрацию
-        // 2.2.2 Нет, отправляем на страницу авторизации
         
         HttpSession session = this.getThreadLocalRequest().getSession();
         if (session.isNew()) {
@@ -70,22 +61,31 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
         Message msgRx = (Message) getMsgError();
         switch (tm) {
             case NewSession:
-                MessageLoginInfo loginInfo = new MessageLoginInfo();
-                msgRx = (Message) loginInfo;
+                MessageError ns = new MessageError();
+                ns.setCode(ErrorsMessage.WARNING_NEW_SESSION.getCode());
+                ns.setDescription(ErrorsMessage.WARNING_NEW_SESSION.getDescription());
+                msgRx = (Message) ns;
                 break;
+            case RqUser:
             case Registration:
-                if (!(msg instanceof Users)) break;
-                Users ur = (Users) msg;
-                
-                Users uRx = new Users();
-                uRx.setEmail("TEST");
-                uRx.setNicname("TEST name");
-                msgRx = (Message) uRx;
-                break;
+//                if (!(msg instanceof Users)) break;
+//                Users ur = (Users) msg;
+//                
+//                Users uRx = new Users();
+//                uRx.setEmail("TEST");
+//                uRx.setLogin("TEST name");
+//                msgRx = (Message) uRx;
+//                break;
             case Login:
-//                if (!(msg instanceof MessageLogin)) break;
-//                msgRx = isAuthentication((MessageLogin) msg);
+                if (!(msg instanceof Users)) break;
+                log.debug("Прокатило:"+ tm.name());
+                Users user = (Users) msg;
+                String loging = user.getLogin();
+                String pas = user.getPassword();
+                user = isAuthentication(loging, pas);
                 
+                msgRx = (Message) user;
+                log.debug("Улетел:"+ user.getTypeMessage().name());
                 break;
             case Error:
                 msgRx = msg;
@@ -102,16 +102,25 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
      * @param msg сообщение
      * @return 
      */
-    private boolean isAuthentication(String login, String pas) {
-        if ( (pas == null) || (pas.length() < 3) ) return false;
-        if ( (login == null) || (login.length() < 3) )  return false;
+    private Users isAuthentication(String login, String pas) {
+        if ( (pas == null) || (pas.length() < 3) ) return null;
+        if ( (login == null) || (login.length() < 3) )  return null;
         
-        if ( login.equals("test@test.ru") && (pas.equals("test")) ) 
-            return true;
+        if ( (login.equals("test")) || (login.equals("123"))
+                || (login.equals("test@email.ru")) ) {
+            if ( (pas.equals("test")) || (pas.equals("1234")) ) {
+                return getTestUser();
+            }
+        }
         
-        //TODO реализация проверки логи/пароль
-        
-        return true;
+        Users user = null;
+        try {
+            String md5Hex = DigestUtils.md5Hex(pas);
+            user = HibernateFactory.getInstance().getUsersDAO().isAuthentication(login, md5Hex);
+        } catch (SQLException ex) {
+            log.fatal(ex);
+        }
+        return user;
     }
     
     /**
@@ -123,5 +132,11 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
         msgError.setCode(ErrorsMessage.WARNING_UNKNOWN_TYPE.getCode());
         msgError.setDescription(ErrorsMessage.WARNING_UNKNOWN_TYPE.getDescription());
         return msgError;
+    }
+    
+    private Users getTestUser() {
+        Users user = new Users(0, "Test", "Иванов", "Иван", "test@email.ru", "1234");
+        
+        return user;
     }
 }

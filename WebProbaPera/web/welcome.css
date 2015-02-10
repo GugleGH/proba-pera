@@ -1,21 +1,31 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
 /* 
     Created on : 19.09.2014, 17:27:20
-    Author     : nosov
+    Author     : Носов А.В.
 */
 
-body {
-   text-align: center;
-   font-family: verdana, sans-serif;
+@font-face { 
+    font-family: "PT Sans"; 
+    src: url('fonts/pt-sans/PTS55F.ttf') 
+        format('truetype'), 
+        url("fonts/pt-sans/PTS55F.eot"); 
 }
+
+html, body {
+/*    font: normal 1em ;*/
+    font-family: "PT Sans", tahoma, arial, times, sans-serif;
+//    margin: 30px;
+    margin-left: 50px;
+    text-align: left;
+}
+
 h1 {
-   font-size: 2em;
-   font-weight: bold;
-   color: #777777;
-   margin: 40px 0px 70px;
-   text-align: center;
+    text-align: left; 
+    margin-bottom: 0; 
+    padding: 0;
 }
+
+h2 {
+    margin-bottom: 0.5em;
+}
+
+a {color: #0f6bdd;}

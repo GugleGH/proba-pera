@@ -41,6 +41,7 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
     
     // Variables declaration
     private MessageServiceAsync msgService = GWT.create(MessageService.class);
+    private AsyncCallback<Message> parent;
     
     private VerticalPanel verticalPanel;
     /** Название панели. */
@@ -57,7 +58,8 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
     private Button buttonInput;
     // End of variables declaration
     
-    public PanelLogin() {
+    public PanelLogin(AsyncCallback<Message> parent) {
+        this.parent = parent;
         initComponents();
     }
     
@@ -66,8 +68,10 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
         labelName = new Label("Вход в систему");
         labelLogin = new Label("Имя или email");
         textBoxLogin = new TextBox();
+        textBoxLogin.setWidth("110px");
         labelPass = new Label("Пароль");
         textBoxPass = new PasswordTextBox();
+        textBoxPass.setWidth("110px");
         buttonInput = new Button("Войти");
         
         textBoxPass.addKeyUpHandler(new KeyUpHandler() {
@@ -108,14 +112,10 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
         if (!Utils.validatePassword(textBoxPass.getText())) return;
         
         Users msgLogin = new Users();
-//        msgLogin.setTypeMessage(TypeMessage.Login);
-        msgLogin.setNicname(textBoxLogin.getText());
+        msgLogin.setTypeMessage(TypeMessage.Login);
+        msgLogin.setLogin(textBoxLogin.getText());
         msgLogin.setPassword(textBoxPass.getText());
-        if (msgLogin instanceof Message) {
-            msgService.getMessage((Message)msgLogin, this);
-        } else {
-            Window.alert("Не смог!");
-        }
+        msgService.getMessage((Message)msgLogin, this);
     }
     
     @Override

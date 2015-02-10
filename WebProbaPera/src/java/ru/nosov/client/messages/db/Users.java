@@ -37,7 +37,7 @@ import ru.nosov.client.messages.system.MessageLoginInfo;
 //@NamedQueries({
 //    @NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
 //    @NamedQuery(name = "Users.findById", query = "SELECT u FROM Users u WHERE u.id = :id"),
-//    @NamedQuery(name = "Users.findByNicname", query = "SELECT u FROM Users u WHERE u.nicname = :nicname"),
+//    @NamedQuery(name = "Users.findByNicname", query = "SELECT u FROM Users u WHERE u.login = :login"),
 //    @NamedQuery(name = "Users.findByFirstname", query = "SELECT u FROM Users u WHERE u.firstname = :firstname"),
 //    @NamedQuery(name = "Users.findByLastname", query = "SELECT u FROM Users u WHERE u.lastname = :lastname"),
 //    @NamedQuery(name = "Users.findByMiddlename", query = "SELECT u FROM Users u WHERE u.middlename = :middlename"),
@@ -57,8 +57,8 @@ public class Users extends MessageLoginInfo implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 16)
-    @Column(name = "nicname")
-    private String nicname;
+    @Column(name = "login")
+    private String login;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 16)
@@ -111,9 +111,9 @@ public class Users extends MessageLoginInfo implements Serializable {
         this.id = id;
     }
 
-    public Users(Integer id, String nicname, String firstname, String lastname, String email, String password) {
+    public Users(Integer id, String login, String firstname, String lastname, String email, String password) {
         this.id = id;
-        this.nicname = nicname;
+        this.login = login;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
@@ -128,12 +128,12 @@ public class Users extends MessageLoginInfo implements Serializable {
         this.id = id;
     }
 
-    public String getNicname() {
-        return nicname;
+    public String getLogin() {
+        return login;
     }
 
-    public void setNicname(String nicname) {
-        this.nicname = nicname;
+    public void setLogin(String nicname) {
+        this.login = nicname;
     }
 
     public String getFirstname() {

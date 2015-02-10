@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import ru.nosov.client.messages.db.Users;
 import ru.nosov.server.db.HibernateSessionFactory;
 
@@ -34,14 +36,14 @@ public class UsersDAOImpl implements UsersDAO {
         } catch (Exception ex) {
             log.error("Error in getAllUsers", ex);
         } finally {
-            if (session!=null && session.isOpen())
+            if (session != null && session.isOpen())
                 session.close();
         }
         return (Collection) users;
     }
 
     @Override
-    public Users getUsersByUid(int uid) throws SQLException {
+    public Users getUsersById(int uid) throws SQLException {
         Session session = null;
         Users user = null;
         try {
@@ -49,9 +51,31 @@ public class UsersDAOImpl implements UsersDAO {
             user = (Users) session.load(Users.class, uid);
 //            System.out.println(telemetry);
         } catch (Exception ex) {
-            log.error("Error in getUsersByUid", ex);
+            log.error("Error in getUsersById", ex);
         } finally {
-            if (session!=null && session.isOpen())
+            if (session != null && session.isOpen())
+                session.close();
+        }
+        return user;
+    }
+    
+    @Override
+    public Users isAuthentication(String login, String pas) throws SQLException {
+        Session session = null;
+        Users user = null;
+        List users;
+        try {
+            session = HibernateSessionFactory.getSessionFactory().openSession();
+            users = session.createCriteria(Users.class)
+                    .add(Restrictions.like("login", login))
+                    .add(Restrictions.like("password", pas)).list();
+            
+            if ( (users != null) && (users.size() == 1) )
+                user = (Users) users.get(0);
+        } catch (Exception ex) {
+            log.error("Error in isAuthentication", ex);
+        } finally {
+            if (session != null && session.isOpen())
                 session.close();
         }
         return user;

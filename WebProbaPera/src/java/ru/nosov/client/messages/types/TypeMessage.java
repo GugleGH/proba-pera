@@ -7,7 +7,8 @@ package ru.nosov.client.messages.types;
 public enum TypeMessage {
     
     /** ---------- msg ---------- */
-    
+    /** Запрос информации о пользователе. */
+    RqUser,
     
     /** ---------- fields msg ---------- */
     

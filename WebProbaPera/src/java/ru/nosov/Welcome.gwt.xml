@@ -7,6 +7,14 @@
     <inherits name="com.google.gwt.user.User"/>
     <inherits name="com.google.web.bindery.autobean.AutoBean"/>
     
+    <inherits name="com.allen_sauer.gwt.log.gwt-log-DEBUG" />
+    <set-property name="log_ConsoleLogger" value="ENABLED" />
+    <set-property name="log_DivLogger" value="DISABLED" />
+    <set-property name="log_GWTLogger" value="DISABLED" />
+    <set-property name="log_SystemLogger" value="DISABLED" />
+    <set-property name="log_WindowLogger" value="DISABLED" />
+    <set-configuration-property name="log_pattern" value="%d{ABSOLUTE} %5p %t %c{1}:%M:%L - %m%n" />
+    
     <!-- Inherit the default GWT style sheet. You can change -->
     <!-- the theme of your GWT application by uncommenting -->
     <!-- any one of the following lines. -->
