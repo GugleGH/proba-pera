@@ -28,5 +28,15 @@ public interface UsersDAO {
      * @return запись
      * @throws java.sql.SQLException
      */
-    public Users getUsersByUid(int uid) throws SQLException;
+    public Users getUsersById(int uid) throws SQLException;
+    
+    /**
+     * Возвращает пользователя авторизовавшегося в системе или null, 
+     * если таковой не найден.
+     * @param login логин
+     * @param pas пароль
+     * @return пользователь
+     * @throws SQLException 
+     */
+    public Users isAuthentication(String login, String pas) throws SQLException;
 }

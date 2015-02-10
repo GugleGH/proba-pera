@@ -23,7 +23,6 @@ import ru.nosov.client.messages.MessageService;
 import ru.nosov.client.messages.MessageServiceAsync;
 import ru.nosov.client.messages.db.Users;
 import ru.nosov.client.messages.system.MessageError;
-import ru.nosov.client.messages.system.MessageLoginInfo;
 import ru.nosov.client.messages.types.TypeMessage;
 import ru.nosov.client.utils.Utils;
 
@@ -31,10 +30,11 @@ import ru.nosov.client.utils.Utils;
  * Панель создания аккаунта.
  * @author Носов А.В.
  */
-public class PanelCreateAcount extends SimplePanel implements AsyncCallback<Message> {
+public class PanelRegistration extends SimplePanel implements AsyncCallback<Message> {
     
     // Variables declaration
     private MessageServiceAsync msgService = GWT.create(MessageService.class);
+    private AsyncCallback<Message> parent;
     
     private FlexTable flexTable;
     
@@ -77,7 +77,8 @@ public class PanelCreateAcount extends SimplePanel implements AsyncCallback<Mess
     private Button buttonInput;
     // End of variables declaration
     
-    public PanelCreateAcount() {
+    public PanelRegistration(AsyncCallback<Message> parent) {
+        this.parent = parent;
         initComponents();
     }
     
@@ -222,7 +223,7 @@ public class PanelCreateAcount extends SimplePanel implements AsyncCallback<Mess
         
         Users u = new Users();
         u.setTypeMessage(TypeMessage.Registration);
-        u.setNicname(textBoxLogin.getText().trim());
+        u.setLogin(textBoxLogin.getText().trim());
         u.setFirstname(textBoxFirstname.getText().trim());
         u.setLastname(textBoxLastname.getText().trim());
         u.setMiddlename(textBoxMiddlename.getText().trim());
@@ -248,7 +249,7 @@ public class PanelCreateAcount extends SimplePanel implements AsyncCallback<Mess
                 Users login = (Users) result;
                 Window.alert("PanelCreateAcount\n"
                         + "Email:" + login.getEmail()+ ";\n"
-                        + "NickName:" + login.getNicname()+ ";");
+                        + "NickName:" + login.getLogin()+ ";");
                 break;
             case Error:
                 MessageError error = (MessageError) result;

@@ -22,7 +22,7 @@ public enum ErrorsMessage {
     /** Неизвестный тип сообщения. */
     WARNING_UNKNOWN_TYPE(2, "WARNING_UNKNOWN_TYPE"),
     /** Слишком много данных для отображения векторной диаграммы. */
-    WARNING_VECTOR_DIAGRAM_DATA(3, "WARNING_VECTOR_DIAGRAM_DATA"),
+    WARNING_NEW_SESSION(3, "WARNING_NEW_SESSION"),
     /** Несовпадение идентификаторов. */
     ERROR_MODULE_ID(4, "ERROR_MODULE_ID"),
     /** Неверная команда запроса. */
