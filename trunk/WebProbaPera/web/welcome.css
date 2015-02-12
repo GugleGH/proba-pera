@@ -13,9 +13,11 @@
 html, body {
 /*    font: normal 1em ;*/
     font-family: "PT Sans", tahoma, arial, times, sans-serif;
-//    margin: 30px;
+    margin-top: 0;
+    margin-right: 50px;
     margin-left: 50px;
     text-align: left;
+    height: 100%;
 }
 
 h1 {
@@ -28,4 +30,56 @@ h2 {
     margin-bottom: 0.5em;
 }
 
-a {color: #0f6bdd;}
+a {
+    color: #0f6bdd; /* Ко всем ссылкам*/
+}
+
+.anchorRegistration {
+    display: inline-block;
+    padding: 10px;
+}
+
+gwt-PopupPanel {
+   border: 3px solid #000000;
+   padding: 3px;
+   background: white;
+}
+
+.gwt-PopupPanelGlass {
+   background-color: #000;
+   opacity: 0.3;
+   filter: alpha(opacity=30);
+}
+
+.gwt-PopupPanel .popupContent {
+   border: none;
+   padding: 3px;
+   background: gray;	
+}
+
+.tableWelcom {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+}
+
+.borderWelcom {
+    border-style: double;
+    border-color: #00BB00;
+}
+.borderWelcom-00 {
+    border-width: 0px 0px 3px 3px;
+    padding: 0px 10px 10px 10px;
+}
+.borderWelcom-01 {
+    border-width: 0px 3px 3px 0px;
+    padding: 0px 10px 10px 10px;
+}
+.borderWelcom-10 {
+    border-width: 0px 0px 0px 3px;
+    padding: 10px;
+}
+.borderWelcom-11 {
+    border-width: 0px 3px 0px 1px;
+    padding: 10px;
+}

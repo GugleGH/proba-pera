@@ -67,6 +67,25 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
                 msgRx = (Message) ns;
                 break;
             case RqUser:
+                Object idRq = session.getAttribute("id");
+                Object loginRq = session.getAttribute("login");
+                Object fnRq = session.getAttribute("firstname");
+                Object lnRq = session.getAttribute("lastname");
+                Object emailRq = session.getAttribute("email");
+                if ( (idRq == null) || (loginRq != null) ||
+                     (fnRq != null) || (lnRq != null) ||
+                     (emailRq != null) ) break;
+                try {
+                    int idRqs = Integer.valueOf(idRq.toString());
+                    Users userRqs = new Users(idRqs, String.valueOf(loginRq),
+                            String.valueOf(fnRq), String.valueOf(lnRq), 
+                            String.valueOf(emailRq), null);
+                    userRqs.setTypeMessage(TypeMessage.LoginInfo);
+                    msgRx = (Message) userRqs;
+                } catch (NumberFormatException e) {
+                    log.error("Не верный идентификатор пользователя.");
+                }
+                break;
             case Registration:
 //                if (!(msg instanceof Users)) break;
 //                Users ur = (Users) msg;
@@ -78,14 +97,18 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 //                break;
             case Login:
                 if (!(msg instanceof Users)) break;
-                log.debug("Прокатило:"+ tm.name());
                 Users user = (Users) msg;
-                String loging = user.getLogin();
+                String login = user.getLogin();
                 String pas = user.getPassword();
-                user = isAuthentication(loging, pas);
-                
+                user = isAuthentication(login, pas);
+                if (user == null) {
+                    user = new Users(-1);
+                    if (log.isInfoEnabled())
+                        log.info("Пользователь не авторизован. Login:" + login + ";");
+                }
+                user.setTypeMessage(TypeMessage.LoginInfo);
+                user.setLogin(login);
                 msgRx = (Message) user;
-                log.debug("Улетел:"+ user.getTypeMessage().name());
                 break;
             case Error:
                 msgRx = msg;
@@ -106,6 +129,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
         if ( (pas == null) || (pas.length() < 3) ) return null;
         if ( (login == null) || (login.length() < 3) )  return null;
         
+        log.debug("Login:"+login+"; Pas:"+pas);
         if ( (login.equals("test")) || (login.equals("123"))
                 || (login.equals("test@email.ru")) ) {
             if ( (pas.equals("test")) || (pas.equals("1234")) ) {

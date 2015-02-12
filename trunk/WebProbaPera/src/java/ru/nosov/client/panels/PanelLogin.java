@@ -14,12 +14,15 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import ru.nosov.client.WelcomeEntryPoint;
 import ru.nosov.client.messages.Message;
 import ru.nosov.client.messages.MessageService;
 import ru.nosov.client.messages.MessageServiceAsync;
@@ -41,7 +44,7 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
     
     // Variables declaration
     private MessageServiceAsync msgService = GWT.create(MessageService.class);
-    private AsyncCallback<Message> parent;
+    private WelcomeEntryPoint parent;
     
     private VerticalPanel verticalPanel;
     /** Название панели. */
@@ -55,25 +58,36 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
     /** Пароль. */
     private PasswordTextBox textBoxPass;
     /** Войти. */
-    private Button buttonInput;
+    private Button buttonLogin;
+    /** Регистрация. */
+    private Button buttonRegistration;
+    /** Забыли пароль. */
+    private Anchor anchorForgot;
     // End of variables declaration
     
-    public PanelLogin(AsyncCallback<Message> parent) {
+    public PanelLogin(WelcomeEntryPoint parent) {
         this.parent = parent;
         initComponents();
     }
     
     private void initComponents() {
         verticalPanel = new VerticalPanel();
+        verticalPanel.setStyleName("login");
         labelName = new Label("Вход в систему");
         labelLogin = new Label("Имя или email");
         textBoxLogin = new TextBox();
-        textBoxLogin.setWidth("110px");
         labelPass = new Label("Пароль");
         textBoxPass = new PasswordTextBox();
-        textBoxPass.setWidth("110px");
-        buttonInput = new Button("Войти");
+        buttonLogin = new Button("Войти");
+        buttonRegistration = new Button("Регистрация");
+        anchorForgot = new Anchor("Забыли пароль?");
         
+//        labelName.setWidth("100%");
+//        labelLogin.setWidth("100%");
+//        textBoxLogin.setWidth("94%");
+//        labelPass.setWidth("100%");
+        
+//        textBoxPass.setWidth("94%");
         textBoxPass.addKeyUpHandler(new KeyUpHandler() {
             @Override
             public void onKeyUp(KeyUpEvent event) {
@@ -83,24 +97,39 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
             }
         });
         
-        buttonInput.addClickHandler(new ClickHandler() {			
+//        buttonLogin.setWidth("100%");
+        buttonLogin.addClickHandler(new ClickHandler() {			
             @Override
             public void onClick(ClickEvent event) {
                 loginig();
             }
         });
         
+//        buttonRegistration.setWidth("100%");
+        buttonRegistration.addClickHandler(new ClickHandler() {			
+            @Override
+            public void onClick(ClickEvent event) {
+                registration();
+            }
+        });
+        
+//        anchorForgot.setWidth("100%");
+        anchorForgot.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+        
         verticalPanel.add(labelName);
         verticalPanel.add(labelLogin);
         verticalPanel.add(textBoxLogin);
         verticalPanel.add(labelPass);
         verticalPanel.add(textBoxPass);
-        verticalPanel.add(buttonInput);
+        verticalPanel.add(buttonLogin);
+        verticalPanel.add(buttonRegistration);
+        verticalPanel.add(anchorForgot);
         
         ServiceDefTarget endpointMsg = (ServiceDefTarget) msgService;
         String urlMsg = "/WebProbaPera/ru_nosov_server_services/messageServiceImpl";
         endpointMsg.setServiceEntryPoint(urlMsg);
         
+//        this.setStyleName("login button");
         this.add(verticalPanel);
     }
     
@@ -115,7 +144,24 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
         msgLogin.setTypeMessage(TypeMessage.Login);
         msgLogin.setLogin(textBoxLogin.getText());
         msgLogin.setPassword(textBoxPass.getText());
-        msgService.getMessage((Message)msgLogin, this);
+        msgService.getMessage((Message)msgLogin, parent);
+        parent.modalVisible("Ожидание авторизации...");
+    }
+    
+    /**
+     * Регистрация.
+     */
+    private void registration() {
+        parent.registration();
+    }
+    
+    /**
+     * Устанавливает логин.
+     * @param login логин
+     */
+    public void setLogin(String login) {
+        if (login == null) return;
+        textBoxLogin.setText(login);
     }
     
     @Override
