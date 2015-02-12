@@ -1,0 +1,13 @@
+/* 
+    Created on : 19.09.2014, 17:27:20
+    Author     : Носов А.В.
+*/
+
+.login {
+    width: 130px;
+    padding: 0px 3px;
+}
+
+.login input, .login button {
+    width: 130px;
+}
