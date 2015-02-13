@@ -18,7 +18,6 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import ru.nosov.client.messages.Message;
@@ -32,6 +31,7 @@ import ru.nosov.client.panels.PanelLeftMenu;
 import ru.nosov.client.panels.PanelLogin;
 import ru.nosov.client.panels.PanelNews;
 import ru.nosov.client.panels.PanelRegistration;
+import ru.nosov.client.panels.PanelUpMenu;
 
 /**
  * Главная страница.
@@ -195,6 +195,8 @@ public class WelcomeEntryPoint implements EntryPoint, AsyncCallback<Message> {
      * @param user пользователь
      */
     private void createLogin(Users user) {
+        flexTable.clearCell(0, 1);
+        flexTable.setWidget(0, 1, new PanelUpMenu());
         flexTable.setWidget(1, 0, new PanelLeftMenu());
         String str = "Login info:"
                 + "<ul type=\"disc\">"
