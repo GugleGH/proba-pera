@@ -107,7 +107,11 @@ public class Users extends MessageLoginInfo implements Serializable {
     private UsersTypes usersTypesId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usersId", fetch = FetchType.LAZY)
     private Collection<Addresses> addressesCollection;
-
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "status")
+    private boolean status;
+    
     public Users() {
     }
 
@@ -236,6 +240,14 @@ public class Users extends MessageLoginInfo implements Serializable {
 
     public void setAddressesCollection(Collection<Addresses> addressesCollection) {
         this.addressesCollection = addressesCollection;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     @Override

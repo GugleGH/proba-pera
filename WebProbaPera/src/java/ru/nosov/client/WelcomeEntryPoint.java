@@ -9,6 +9,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
@@ -48,9 +49,6 @@ public class WelcomeEntryPoint implements EntryPoint, AsyncCallback<Message> {
     private FlexTable flexTable;
     private VerticalPanel verticalPanel;
     
-    /** Модальное окно. */
-    private final PopupPanel popupPanel;
-    
     /** Сервис сообщений. */
     private MessageServiceAsync msgService;
     /** Регистрация. */
@@ -61,7 +59,6 @@ public class WelcomeEntryPoint implements EntryPoint, AsyncCallback<Message> {
      * Creates a new instance of MainEntryPoint
      */
     public WelcomeEntryPoint() {
-        popupPanel = new PopupPanel(false, true);
     }
 
     /**
@@ -132,21 +129,13 @@ public class WelcomeEntryPoint implements EntryPoint, AsyncCallback<Message> {
     }
     
     /**
-     * Показать модальное окно ожидания.
-     * @param str отображаемая строка
+     * Возвращает иконку refresh темы awesome.
+     * @return refresh icon
      */
-    public void modalVisible(String str) {
-//        popupPanel.add(new Label(str));
-//        popupPanel.setGlassEnabled(true);
-//        popupPanel.center();
-//        popupPanel.setVisible(true);
-    }
-    
-    /**
-     * Скрыть модальное окно ожидания.
-     */
-    public void modalUnvisible() {
-        popupPanel.setVisible(false);
+    public SafeHtmlBuilder getAwesomeRefresh() {
+        SafeHtmlBuilder sb = new SafeHtmlBuilder();
+        sb.appendHtmlConstant("<i class=\"fa fa-refresh fa-spin\"></i>");
+        return sb;
     }
     
     /**

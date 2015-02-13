@@ -10,10 +10,6 @@ public enum TypeMessage {
     /** Запрос информации о пользователе. */
     RqUser,
     
-    /** ---------- fields msg ---------- */
-    
-    
-    /** ---------- system msg ---------- */
     /** Общие ошибки. */
     Error,
     
@@ -28,4 +24,7 @@ public enum TypeMessage {
     
     /** Регистрация нового пользователя. */
     Registration,
+    
+    /** Проверка логина. */
+    isLoginName
 }

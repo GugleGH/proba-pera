@@ -6,18 +6,25 @@
 package ru.nosov.client.panels;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
+import ru.nosov.client.WelcomeEntryPoint;
 import ru.nosov.client.messages.Message;
 import ru.nosov.client.messages.MessageService;
 import ru.nosov.client.messages.MessageServiceAsync;
@@ -34,7 +41,7 @@ public class PanelRegistration extends SimplePanel implements AsyncCallback<Mess
     
     // Variables declaration
     private MessageServiceAsync msgService = GWT.create(MessageService.class);
-    private AsyncCallback<Message> parent;
+    private WelcomeEntryPoint parent;
     
     private FlexTable flexTable;
     
@@ -43,7 +50,7 @@ public class PanelRegistration extends SimplePanel implements AsyncCallback<Mess
     /** Логин. */
     private Label labelLogin;
     private TextBox textBoxLogin;
-    private Label validLogin;
+    private HTML validLogin;
     /** Имя. */
     private Label labelFirstname;
     private TextBox textBoxFirstname;
@@ -77,7 +84,7 @@ public class PanelRegistration extends SimplePanel implements AsyncCallback<Mess
     private Button buttonInput;
     // End of variables declaration
     
-    public PanelRegistration(AsyncCallback<Message> parent) {
+    public PanelRegistration(WelcomeEntryPoint parent) {
         this.parent = parent;
         initComponents();
     }
@@ -88,7 +95,7 @@ public class PanelRegistration extends SimplePanel implements AsyncCallback<Mess
         labelName = new Label("Создать аккаунт");
         labelLogin = new Label("Логин");
         textBoxLogin = new TextBox();
-        validLogin = new Label();
+        validLogin = new HTML();
         labelFirstname = new Label("Имя*");
         textBoxFirstname = new TextBox();
         validFirstName = new Label();
@@ -112,6 +119,30 @@ public class PanelRegistration extends SimplePanel implements AsyncCallback<Mess
         textBoxPass2 = new PasswordTextBox();
         validPass1 = new Label();
         validPass2 = new Label();
+        
+        validLogin.setStyleName("login-red");
+        validFirstName.setStyleName("login-red");
+        validLastname.setStyleName("login-red");
+        validEmail1.setStyleName("login-red");
+        validEmail2.setStyleName("login-red");
+        validBirthday.setStyleName("login-red");
+        validPass1.setStyleName("login-red");
+        validPass2.setStyleName("login-red");
+        
+        textBoxLogin.addKeyUpHandler(new KeyUpHandler() {
+
+            @Override
+            public void onKeyUp(KeyUpEvent event) {
+                onBlurTextBoxLogin(event);
+            }
+        });
+        textBoxLogin.addBlurHandler(new BlurHandler() {
+
+            @Override
+            public void onBlur(BlurEvent event) {
+                onBlurTextBoxLogin(null);
+            }
+        });
         
         buttonInput = new Button("Создать аккаунт");
         buttonInput.addClickHandler(new ClickHandler() {			
@@ -167,6 +198,18 @@ public class PanelRegistration extends SimplePanel implements AsyncCallback<Mess
         endpointMsg.setServiceEntryPoint(urlMsg);
         
         this.add(flexTable);
+    }
+    
+    private void onBlurTextBoxLogin(KeyUpEvent event) {
+        if ( (event == null) || (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) ) {
+            if (textBoxLogin.getText().trim().length() <= 3 ) return;
+            Users u = new Users();
+            u.setTypeMessage(TypeMessage.isLoginName);
+            u.setLogin(textBoxLogin.getText());
+            msgService.getMessage(u, this);
+            validLogin.setStyleName("login-red");
+            validLogin.setHTML(parent.getAwesomeRefresh().toSafeHtml());
+        }
     }
     
     private void buttonInputOnClick(ClickEvent event) {
@@ -247,13 +290,19 @@ public class PanelRegistration extends SimplePanel implements AsyncCallback<Mess
         }
         TypeMessage tm = result.getTypeMessage();
         switch (tm) {
-            case LoginInfo:
+            case isLoginName:
+                if ( !(result instanceof Users)) break;
+                Users user = (Users) result;
+                if (user.isStatus()) {
+                    validLogin.setText("Свободно");
+                    validLogin.setStyleName("login-green");
+                } else {
+                    validLogin.setText("Занято");
+                    validLogin.setStyleName("login-red");
+                }
                 break;
             case Error:
-                MessageError error = (MessageError) result;
-                Window.alert("PanelCreateAcount\n"
-                        + "CODE:" + error.getCode() + ";\n"
-                        + "DESC:" + error.getDescription() + ";");
+                parent.onSuccess(result);
                 break;
         }
     }

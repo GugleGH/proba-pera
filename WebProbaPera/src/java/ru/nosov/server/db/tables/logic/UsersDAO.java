@@ -49,5 +49,13 @@ public interface UsersDAO {
      */
     public boolean addUser(Users user) throws SQLException;
     
+    /**
+     * Возвращает результат проверки прозвища.
+     * @param login прозвище
+     * @return <b>true</b> - прозвище естьв БД,
+     * <b>false</b> - прозвище нет в БД.
+     * @throws SQLException 
+     */
+    public boolean isLoginName(String login) throws SQLException;
 //    public boolean isLoginOREmail(Users user) throws SQLException;
 }
