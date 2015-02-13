@@ -18,6 +18,16 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class PanelLeftMenu extends SimplePanel {
     
     // Variables declaration
+    /** Моя страница. */
+    private Label labelAboute;
+    /** Сообщения. */
+    private Label labelMessages;
+    /** Группы. */
+    private Label labelGoups;
+    /** Новости. */
+    private Label labelNews;
+    /** Настройки. */
+    private Label labelSettings;
     // End of variables declaration
     
     /**
@@ -29,8 +39,17 @@ public class PanelLeftMenu extends SimplePanel {
         panel.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
         panel.setWidth("100%");
         
-        for (int i=0; i<5; i++)
-            panel.add(new Label("Меню № " + i));
+        labelAboute = new Label("Моя страница");
+        labelMessages = new Label("Мои сообщения");
+        labelGoups = new Label("Мои группы");
+        labelNews = new Label("Новости");
+        labelSettings = new Label("Настройки");
+        
+        panel.add(labelAboute);
+        panel.add(labelMessages);
+        panel.add(labelGoups);
+        panel.add(labelNews);
+        panel.add(labelSettings);
         
         this.add(panel);
     }
