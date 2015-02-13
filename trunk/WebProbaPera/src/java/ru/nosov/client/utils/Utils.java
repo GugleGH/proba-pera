@@ -5,8 +5,6 @@
 
 package ru.nosov.client.utils;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * Класс полезных утилиток.
  * @author Носов А.В.
@@ -35,7 +33,7 @@ public class Utils {
      * <b>false</b> - не верно.
      */
     public static boolean validateName(String name) {
-        return (name != null);
+        return !((name == null) || (name.trim().length() < 1));
     }
     
     /**
@@ -45,8 +43,7 @@ public class Utils {
      * <b>false</b> - не верно.
      */
     public static boolean validateLogin(String login) {
-        if (login == null) return false;
-        return login.trim().length() >= 3;
+        return ((login == null) || (login.trim().length() == 0) || (login.trim().length() >= 3));
     }
     
     /**
@@ -56,8 +53,7 @@ public class Utils {
      * <b>false</b> - не верно.
      */
     public static boolean validatePassword(String pass) {
-        if (pass == null) return false;
-        return pass.trim().length() >= 3;
+        return !((pass == null) || (pass.trim().length() < 3));
     }
     
     /**
@@ -67,6 +63,6 @@ public class Utils {
      * <b>false</b> - не верно.
      */
     public static boolean validateEmail(String email) {
-        return (email != null);
+        return !((email == null) || (email.indexOf("@") < 1));
     }
 }

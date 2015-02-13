@@ -8,15 +8,19 @@ package ru.nosov.server.services;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
+import org.hibernate.exception.GenericJDBCException;
 import ru.nosov.client.messages.Message;
 import ru.nosov.client.messages.MessageService;
 import ru.nosov.client.messages.db.Users;
+import ru.nosov.client.messages.db.UsersTypes;
 import ru.nosov.client.messages.system.MessageError;
 import ru.nosov.client.messages.types.TypeMessage;
+import ru.nosov.client.utils.Utils;
 import ru.nosov.server.db.HibernateFactory;
 import ru.nosov.server.exceptions.errors.ErrorsMessage;
 
@@ -87,28 +91,12 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
                 }
                 break;
             case Registration:
-//                if (!(msg instanceof Users)) break;
-//                Users ur = (Users) msg;
-//                
-//                Users uRx = new Users();
-//                uRx.setEmail("TEST");
-//                uRx.setLogin("TEST name");
-//                msgRx = (Message) uRx;
-//                break;
+                if (!(msg instanceof Users)) break;
+                msgRx = addNewUser((Users) msg);
+                break;
             case Login:
                 if (!(msg instanceof Users)) break;
-                Users user = (Users) msg;
-                String login = user.getLogin();
-                String pas = user.getPassword();
-                user = isAuthentication(login, pas);
-                if (user == null) {
-                    user = new Users(-1);
-                    if (log.isInfoEnabled())
-                        log.info("Пользователь не авторизован. Login:" + login + ";");
-                }
-                user.setTypeMessage(TypeMessage.LoginInfo);
-                user.setLogin(login);
-                msgRx = (Message) user;
+                msgRx = (Message) isAuthentication((Users) msg);
                 break;
             case Error:
                 msgRx = msg;
@@ -125,7 +113,10 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
      * @param msg сообщение
      * @return 
      */
-    private Users isAuthentication(String login, String pas) {
+    private Users isAuthentication(Users user) {
+        String login = user.getLogin();
+        String pas = user.getPassword();
+        
         if ( (pas == null) || (pas.length() < 3) ) return null;
         if ( (login == null) || (login.length() < 3) )  return null;
         
@@ -137,14 +128,85 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
             }
         }
         
-        Users user = null;
+        user = null;
         try {
             String md5Hex = DigestUtils.md5Hex(pas);
             user = HibernateFactory.getInstance().getUsersDAO().isAuthentication(login, md5Hex);
         } catch (SQLException ex) {
             log.fatal(ex);
         }
+        
+        if (user == null) {
+            user = new Users(-1);
+            if (log.isInfoEnabled())
+                log.info("Пользователь не авторизован. Login:" + login + ";");
+        }
+        user.setTypeMessage(TypeMessage.LoginInfo);
+        user.setLogin(login);
         return user;
+    }
+    
+    /**
+     * Добавляет нового пользователя.
+     * @param user пользователь
+     * @return результат
+     */
+    private Message addNewUser(Users user) {
+        MessageError er = getMsgErrorRegistration();
+        
+        String firstName = user.getFirstname();
+        String lastName = user.getLastname();
+        if ( (!Utils.validateName(firstName)) || ((!Utils.validateName(lastName))) ) {
+            er.setDescription("Ошибка в имени или фамилии пользователя.");
+            return er;
+        }
+        String email = user.getEmail();
+        if ( !Utils.validateEmail(email) ) {
+            er.setDescription("Ошибка в email пользователя.");
+            return er;
+        }
+        String pass = user.getPassword();
+        if ( !Utils.validatePassword(pass) ) {
+            er.setDescription("Ошибка в пароле пользователя.");
+            return er;
+        }
+        user.setFirstname(firstName.trim());
+        user.setLastname(lastName.trim());
+        user.setEmail(email.trim());
+        user.setPassword(pass.trim());
+        
+        String login = user.getLogin();
+        if (login != null)
+            if (Utils.validateLogin(login))
+                user.setLogin( (login.trim().length() == 0) ? null : login.trim() );
+        
+        String middleName = user.getMiddlename();
+        if (middleName != null)
+            user.setMiddlename( (!Utils.validateName(middleName)) ? null : middleName.trim() );
+            
+        
+        try {
+            String md5Hex = DigestUtils.md5Hex(pass);
+            user.setPassword(md5Hex);
+            UsersTypes ut = HibernateFactory.getInstance().getUsersTypesDAO().getUsersTypesById(1);
+            user.setUsersTypesId(ut);
+            
+            boolean b = HibernateFactory.getInstance().getUsersDAO().addUser(user);
+            if (!b) return er;
+            user.setTypeMessage(TypeMessage.LoginInfo);
+            return (Message) user;
+        } catch (SQLException ex) {
+            log.error("SQLException", ex);
+            return getMsgErrorRegistration();
+        } catch (GenericJDBCException ex) {
+            log.error("GenericJDBCException", ex);
+            return getMsgErrorRegistration();
+        }
+    }
+    
+    private boolean isLogin(String login) {
+        
+        return true;
     }
     
     /**
@@ -156,6 +218,13 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
         msgError.setCode(ErrorsMessage.WARNING_UNKNOWN_TYPE.getCode());
         msgError.setDescription(ErrorsMessage.WARNING_UNKNOWN_TYPE.getDescription());
         return msgError;
+    }
+    
+    private MessageError getMsgErrorRegistration() {
+        MessageError er = new MessageError();
+        er.setCode(ErrorsMessage.ERROR_REGISTRATION.getCode());
+        er.setDescription(ErrorsMessage.ERROR_REGISTRATION.getDescription());
+        return er;
     }
     
     private Users getTestUser() {

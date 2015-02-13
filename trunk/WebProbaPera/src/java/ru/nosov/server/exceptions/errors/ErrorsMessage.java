@@ -32,7 +32,9 @@ public enum ErrorsMessage {
     /** Неверный тип запроса. */
     ERROR_TYPE_REQUEST(5, "ERROR_TYPE_REQUEST"),
     /** Неверный тип ответа. */
-    ERROR_TYPE_RESPONSE(6, "ERROR_TYPE_RESPONSE");
+    ERROR_TYPE_RESPONSE(6, "ERROR_TYPE_RESPONSE"),
+    /** Ошибка регистрации пользователя. */
+    ERROR_REGISTRATION(7, "ERROR_REGISTRATION");
     
     /** Описание ошибки. */
     private final String description;
