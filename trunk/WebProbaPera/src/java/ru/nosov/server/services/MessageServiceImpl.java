@@ -7,9 +7,6 @@ package ru.nosov.server.services;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
@@ -60,8 +57,6 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 //        }
 //        Message msgRx = (Message) getMessageError();
         
-        String tx;
-        //
         Message msgRx = (Message) getMsgError();
         switch (tm) {
             case NewSession:
@@ -71,24 +66,29 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
                 msgRx = (Message) ns;
                 break;
             case RqUser:
+                Users userRqs = new Users();
+                userRqs.setStatus(false);
                 Object idRq = session.getAttribute("id");
                 Object loginRq = session.getAttribute("login");
                 Object fnRq = session.getAttribute("firstname");
                 Object lnRq = session.getAttribute("lastname");
                 Object emailRq = session.getAttribute("email");
-                if ( (idRq == null) || (loginRq != null) ||
+                if ( (idRq != null) || /*(loginRq != null) ||*/
                      (fnRq != null) || (lnRq != null) ||
-                     (emailRq != null) ) break;
-                try {
-                    int idRqs = Integer.valueOf(idRq.toString());
-                    Users userRqs = new Users(idRqs, String.valueOf(loginRq),
-                            String.valueOf(fnRq), String.valueOf(lnRq), 
-                            String.valueOf(emailRq), null);
-                    userRqs.setTypeMessage(TypeMessage.LoginInfo);
-                    msgRx = (Message) userRqs;
-                } catch (NumberFormatException e) {
-                    log.error("Не верный идентификатор пользователя.");
+                     (emailRq != null) ) {
+                    try {
+                        int idRqs = Integer.valueOf(String.valueOf(idRq));
+                        userRqs.setId(idRqs);
+                        userRqs.setLogin( (loginRq == null) ? null : String.valueOf(loginRq));
+                        userRqs.setFirstname(String.valueOf(fnRq));
+                        userRqs.setLastname(String.valueOf(lnRq));
+                        userRqs.setEmail(String.valueOf(emailRq));
+                        userRqs.setTypeMessage(TypeMessage.LoginInfo);
+                    } catch (NumberFormatException e) {
+                        log.error("RqUser. Не верный идентификатор пользователя.");
+                    }
                 }
+                msgRx = (Message) userRqs;
                 break;
             case Registration:
                 if (!(msg instanceof Users)) break;
@@ -100,6 +100,10 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
                 break;
             case Error:
                 msgRx = msg;
+                break;
+            case isLoginName:
+                if (!(msg instanceof Users)) break;
+                msgRx = isLoginName((Users) msg);
                 break;
             default:
 //                msgRx = (Message) getMsgError();
@@ -194,6 +198,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
             boolean b = HibernateFactory.getInstance().getUsersDAO().addUser(user);
             if (!b) return er;
             user.setTypeMessage(TypeMessage.LoginInfo);
+            user.setPassword(null);
             return (Message) user;
         } catch (SQLException ex) {
             log.error("SQLException", ex);
@@ -204,9 +209,21 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
         }
     }
     
-    private boolean isLogin(String login) {
-        
-        return true;
+    /**
+     * Проверяет наличие прозвища в БД.
+     * @param u пользователь
+     * @return результат
+     */
+    private Message isLoginName(Users u) {
+        String ul = u.getLogin().trim();
+        try {
+        if ( (ul != null) && (ul.length() > 3) )
+            u.setStatus(HibernateFactory.getInstance().getUsersDAO().isLoginName(ul));
+        } catch (SQLException ex) {
+            log.error("SQLException", ex);
+            u.setStatus(false);
+        }
+        return u;
     }
     
     /**

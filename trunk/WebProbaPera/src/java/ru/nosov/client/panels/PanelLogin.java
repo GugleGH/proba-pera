@@ -16,7 +16,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -59,6 +58,7 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
     private PasswordTextBox textBoxPass;
     /** Войти. */
     private Button buttonLogin;
+    private String strLogin = "Войти";
     /** Регистрация. */
     private Button buttonRegistration;
     /** Забыли пароль. */
@@ -78,16 +78,10 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
         textBoxLogin = new TextBox();
         labelPass = new Label("Пароль");
         textBoxPass = new PasswordTextBox();
-        buttonLogin = new Button("Войти");
+        buttonLogin = new Button(strLogin);
         buttonRegistration = new Button("Регистрация");
         anchorForgot = new Anchor("Забыли пароль?");
         
-//        labelName.setWidth("100%");
-//        labelLogin.setWidth("100%");
-//        textBoxLogin.setWidth("94%");
-//        labelPass.setWidth("100%");
-        
-//        textBoxPass.setWidth("94%");
         textBoxPass.addKeyUpHandler(new KeyUpHandler() {
             @Override
             public void onKeyUp(KeyUpEvent event) {
@@ -97,7 +91,6 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
             }
         });
         
-//        buttonLogin.setWidth("100%");
         buttonLogin.addClickHandler(new ClickHandler() {			
             @Override
             public void onClick(ClickEvent event) {
@@ -105,16 +98,12 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
             }
         });
         
-//        buttonRegistration.setWidth("100%");
         buttonRegistration.addClickHandler(new ClickHandler() {			
             @Override
             public void onClick(ClickEvent event) {
                 registration();
             }
         });
-        
-//        anchorForgot.setWidth("100%");
-        anchorForgot.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
         
         verticalPanel.add(labelName);
         verticalPanel.add(labelLogin);
@@ -129,7 +118,6 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
         String urlMsg = "/WebProbaPera/ru_nosov_server_services/messageServiceImpl";
         endpointMsg.setServiceEntryPoint(urlMsg);
         
-//        this.setStyleName("login button");
         this.add(verticalPanel);
     }
     
@@ -145,7 +133,7 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
         msgLogin.setLogin(textBoxLogin.getText());
         msgLogin.setPassword(textBoxPass.getText());
         msgService.getMessage((Message)msgLogin, parent);
-        parent.modalVisible("Ожидание авторизации...");
+        buttonLogin.setHTML(parent.getAwesomeRefresh().toSafeHtml());
     }
     
     /**
@@ -162,6 +150,11 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
     public void setLogin(String login) {
         if (login == null) return;
         textBoxLogin.setText(login);
+        updateButtons();
+    }
+    
+    private void updateButtons() {
+        buttonLogin.setText(strLogin);
     }
     
     @Override

@@ -82,6 +82,27 @@ public class UsersDAOImpl implements UsersDAO {
         return user;
     }
     
+    @Override
+    public boolean isLoginName(String login) throws SQLException {
+        Session session = null;
+        List users = new ArrayList<Users>();
+        try {
+            session = HibernateSessionFactory.getSessionFactory().openSession();
+            
+            users = session.createCriteria(Users.class)
+                .add( Restrictions.like("login", login) ).list();
+            
+        } catch (Exception ex) {
+            log.error("Error in isLoginName", ex);
+        } finally {
+            if (session != null && session.isOpen())
+                session.close();
+        }
+        
+        if (users == null) return false;
+        return users.isEmpty();
+    }
+    
 //    @Override
     private boolean isLoginOREmail(Users user) throws SQLException {
         Session session = null;
