@@ -181,10 +181,12 @@ public class WelcomeEntryPoint implements EntryPoint, AsyncCallback<Message> {
             case Error:
                 MessageError error = (MessageError) result;
                 switch (error.getCode()) {
-                    case 3:
+                    case 3: // WARNING_NEW_SESSION
                         clearOneRow();
                         flexTable.setWidget(1, 0, new PanelLogin(this));
                         verticalPanel.add(new PanelNews(PanelNews.TYPE_NEWS));
+                        break;
+                    case 7: // ERROR_REGISTRATION
                         break;
                 }
                 break;

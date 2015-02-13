@@ -7,10 +7,11 @@ package ru.nosov.server.db.tables.logic;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import ru.nosov.client.messages.db.Users;
@@ -79,5 +80,55 @@ public class UsersDAOImpl implements UsersDAO {
                 session.close();
         }
         return user;
+    }
+    
+//    @Override
+    private boolean isLoginOREmail(Users user) throws SQLException {
+        Session session = null;
+        //Users user = null;
+        List users = new ArrayList<Users>();
+        try {
+            session = HibernateSessionFactory.getSessionFactory().openSession();
+            if (user.getLogin() == null) {
+                users = session.createCriteria(Users.class)
+                    .add( Restrictions.like("email", user.getEmail()) ).list();
+            } else {
+                users = session.createCriteria(Users.class)
+                        .add(Restrictions.or(
+                                Restrictions.like("login", user.getLogin()),
+                                Restrictions.like("email", user.getEmail()))
+                        ).list();
+            }
+        } catch (Exception ex) {
+            log.error("Error in isLoginOREmail", ex);
+        } finally {
+            if (session != null && session.isOpen())
+                session.close();
+        }
+        
+        if (users == null) return true;
+        return users.isEmpty();
+    }
+    
+    @Override
+    public boolean addUser(Users user) throws SQLException {
+        Session session = null;
+        try {
+            Calendar cal = Calendar.getInstance();
+            user.setCreateTime(cal.getTime());
+            session = HibernateSessionFactory.getSessionFactory().openSession();
+            session.beginTransaction();
+            if (!isLoginOREmail(user)) return false;
+            session.save(user);
+            session.getTransaction().commit();
+        } catch (HibernateException | SQLException ex) {
+            log.error("Error in addUser", ex);
+        } finally {
+            log.error("Session is close.");
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+        return true;
     }
 }

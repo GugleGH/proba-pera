@@ -204,7 +204,7 @@ public class PanelRegistration extends SimplePanel implements AsyncCallback<Mess
             validEmail2.setText("Недопустимый электронный адрес.");
             b = false;
         }
-        if (textBoxEmail1.getText().trim().equals(textBoxEmail2.getText().trim())) {
+        if (!textBoxEmail1.getText().trim().equals(textBoxEmail2.getText().trim())) {
             validEmail2.setText("Электронные адреса не совпадают.");
             b = false;
         }
@@ -216,10 +216,12 @@ public class PanelRegistration extends SimplePanel implements AsyncCallback<Mess
             validPass2.setText("Пароль не может быть короче 3х символов.");
             b = false;
         }
-        if (textBoxPass1.getText().trim().equals(textBoxPass2.getText().trim())) {
+        if (!textBoxPass1.getText().trim().equals(textBoxPass2.getText().trim())) {
             validPass2.setText("Пароли не совпадают.");
             b = false;
         }
+        
+        if (!b) return;
         
         Users u = new Users();
         u.setTypeMessage(TypeMessage.Registration);
@@ -229,7 +231,7 @@ public class PanelRegistration extends SimplePanel implements AsyncCallback<Mess
         u.setMiddlename(textBoxMiddlename.getText().trim());
         u.setEmail(textBoxEmail1.getText().trim());
         u.setPassword(textBoxPass1.getText().trim());
-        msgService.getMessage(u, this);
+        msgService.getMessage(u, parent);
     }
 
     @Override
@@ -246,10 +248,6 @@ public class PanelRegistration extends SimplePanel implements AsyncCallback<Mess
         TypeMessage tm = result.getTypeMessage();
         switch (tm) {
             case LoginInfo:
-                Users login = (Users) result;
-                Window.alert("PanelCreateAcount\n"
-                        + "Email:" + login.getEmail()+ ";\n"
-                        + "NickName:" + login.getLogin()+ ";");
                 break;
             case Error:
                 MessageError error = (MessageError) result;

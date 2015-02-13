@@ -13,6 +13,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
@@ -50,12 +52,13 @@ public class Users extends MessageLoginInfo implements Serializable {
     
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Size(min = 1, max = 16)
     @Column(name = "login")
     private String login;
@@ -100,6 +103,7 @@ public class Users extends MessageLoginInfo implements Serializable {
     private Collection<Jobs> jobsCollection;
     @JoinColumn(name = "users_types_id", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @NotNull
     private UsersTypes usersTypesId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usersId", fetch = FetchType.LAZY)
     private Collection<Addresses> addressesCollection;

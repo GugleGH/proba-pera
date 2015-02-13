@@ -39,4 +39,15 @@ public interface UsersDAO {
      * @throws SQLException 
      */
     public Users isAuthentication(String login, String pas) throws SQLException;
+    
+    /**
+     * Добавить нового пользователя.
+     * @param user пользователь
+     * @return <b>true</b> - пользователь зарегистрирован,
+     * <b>false</b> - ошибка регистрации пользователя
+     * @throws java.sql.SQLException
+     */
+    public boolean addUser(Users user) throws SQLException;
+    
+//    public boolean isLoginOREmail(Users user) throws SQLException;
 }
