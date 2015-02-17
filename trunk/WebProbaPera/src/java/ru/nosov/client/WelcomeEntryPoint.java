@@ -5,6 +5,7 @@
  */
 package ru.nosov.client;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -21,6 +22,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import ru.nosov.client.messages.Message;
+import ru.nosov.client.messages.MessageNews;
 import ru.nosov.client.messages.MessageService;
 import ru.nosov.client.messages.MessageServiceAsync;
 import ru.nosov.client.messages.db.Users;
@@ -29,7 +31,7 @@ import ru.nosov.client.messages.types.TypeMessage;
 import ru.nosov.client.panels.PanelHeader;
 import ru.nosov.client.panels.PanelLeftMenu;
 import ru.nosov.client.panels.PanelLogin;
-import ru.nosov.client.panels.PanelNews;
+import ru.nosov.client.panels.PanelNewsLine;
 import ru.nosov.client.panels.PanelRegistration;
 import ru.nosov.client.panels.PanelUpMenu;
 
@@ -70,15 +72,16 @@ public class WelcomeEntryPoint implements EntryPoint, AsyncCallback<Message> {
         initMsgService();
         flexTable = new FlexTable();
         verticalPanel = new VerticalPanel();
+        verticalPanel.setWidth("100%");
 //        verticalPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
         
         anchorRegistration = new Anchor("Регистрация");
-        anchorRegistration.setStyleName("anchorRegistration");
+        anchorRegistration.addStyleName("gwt-Anchor-Rigth");
         
         flexTable.setWidget(0, 0, new PanelHeader());
         flexTable.setWidget(0, 1, anchorRegistration);
-        flexTable.setWidget(1, 0, new PanelLeftMenu());
-        verticalPanel.add(new PanelNews(PanelNews.TYPE_NEWS));
+        flexTable.setWidget(1, 0, new PanelLeftMenu(this));
+//        verticalPanel.add(new PanelNewsLine(this, PanelNewsLine.TYPE_NEWS));
         flexTable.setWidget(1, 1, verticalPanel);
         flexTable.setStyleName("tableWelcom");
         FlexTable.FlexCellFormatter cellFlex = flexTable.getFlexCellFormatter();
@@ -114,8 +117,6 @@ public class WelcomeEntryPoint implements EntryPoint, AsyncCallback<Message> {
         msgService.getMessage(msgUser, this);
         
         RootPanel.get().add(flexTable);
-        //RootPanel.get().add(new PanelCreateAcount());
-        //RootPanel.get().add(new PanelLogin());
     }
     
     /**
@@ -126,6 +127,14 @@ public class WelcomeEntryPoint implements EntryPoint, AsyncCallback<Message> {
         ServiceDefTarget endpointMsg = (ServiceDefTarget) msgService;
         String urlMsg = "/WebProbaPera/ru_nosov_server_services/messageServiceImpl";
         endpointMsg.setServiceEntryPoint(urlMsg);
+    }
+    
+    public MessageServiceAsync getMsgService() {
+//        MessageNews msgNews = new MessageNews();
+//        msgNews.setTypeMessage(TypeMessage.RqNewsLine);
+//        msgService.getMessage(msgNews, this);
+        
+        return msgService;
     }
     
     /**
@@ -149,7 +158,7 @@ public class WelcomeEntryPoint implements EntryPoint, AsyncCallback<Message> {
     
     @Override
     public void onFailure(Throwable caught) {
-        Window.alert("WelcomeEntryPoint no response");
+        Log.error(CLASS_NAME, "No response");
     }
 
     @Override
@@ -167,13 +176,19 @@ public class WelcomeEntryPoint implements EntryPoint, AsyncCallback<Message> {
                 else
                     createLogin(user);
                 break;
+            case RxNews:
+                verticalPanel.clear();
+                PanelNewsLine pNews = new PanelNewsLine(this, PanelNewsLine.TYPE_NEWS);
+                pNews.onSuccess(result);
+                verticalPanel.add(pNews);
+                break;
             case Error:
                 MessageError error = (MessageError) result;
                 switch (error.getCode()) {
                     case 3: // WARNING_NEW_SESSION
                         clearOneRow();
                         flexTable.setWidget(1, 0, new PanelLogin(this));
-                        verticalPanel.add(new PanelNews(PanelNews.TYPE_NEWS));
+                        verticalPanel.add(new PanelNewsLine(this, PanelNewsLine.TYPE_NEWS));
                         break;
                     case 7: // ERROR_REGISTRATION
                         break;
@@ -197,7 +212,7 @@ public class WelcomeEntryPoint implements EntryPoint, AsyncCallback<Message> {
     private void createLogin(Users user) {
         flexTable.clearCell(0, 1);
         flexTable.setWidget(0, 1, new PanelUpMenu());
-        flexTable.setWidget(1, 0, new PanelLeftMenu());
+        flexTable.setWidget(1, 0, new PanelLeftMenu(this));
         String str = "Login info:"
                 + "<ul type=\"disc\">"
                 + "<li>Login:" + user.getLogin() + "</li>"
@@ -216,7 +231,7 @@ public class WelcomeEntryPoint implements EntryPoint, AsyncCallback<Message> {
         PanelLogin login = new PanelLogin(this);
         login.setLogin(user.getLogin());
         flexTable.setWidget(1, 0, login);
-        verticalPanel.add(new PanelNews(PanelNews.TYPE_LOGIN_ERROR));
+        verticalPanel.add(new PanelNewsLine(this, PanelNewsLine.TYPE_LOGIN_ERROR));
         verticalPanel.add(login);
     }
     

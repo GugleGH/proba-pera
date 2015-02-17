@@ -5,15 +5,12 @@
  */
 package ru.nosov.client.panels;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
@@ -23,8 +20,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import ru.nosov.client.WelcomeEntryPoint;
 import ru.nosov.client.messages.Message;
-import ru.nosov.client.messages.MessageService;
-import ru.nosov.client.messages.MessageServiceAsync;
 import ru.nosov.client.messages.db.Users;
 import ru.nosov.client.messages.system.MessageError;
 import ru.nosov.client.messages.types.TypeMessage;
@@ -39,10 +34,10 @@ import ru.nosov.client.utils.Utils;
  * 3. Переложить все на Apache и закрыться полностью https.
  * @author Носов А.В.
  */
-public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
+public class PanelLogin extends SimplePanel {
     
     // Variables declaration
-    private MessageServiceAsync msgService = GWT.create(MessageService.class);
+//    private MessageServiceAsync msgService;
     private WelcomeEntryPoint parent;
     
     private VerticalPanel verticalPanel;
@@ -114,10 +109,6 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
         verticalPanel.add(buttonRegistration);
         verticalPanel.add(anchorForgot);
         
-        ServiceDefTarget endpointMsg = (ServiceDefTarget) msgService;
-        String urlMsg = "/WebProbaPera/ru_nosov_server_services/messageServiceImpl";
-        endpointMsg.setServiceEntryPoint(urlMsg);
-        
         this.add(verticalPanel);
     }
     
@@ -125,6 +116,7 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
      * Авторизация.
      */
     private void loginig() {
+        if (parent == null) return;
         if (!Utils.validateLogin(textBoxLogin.getText())) return;
         if (!Utils.validatePassword(textBoxPass.getText())) return;
         
@@ -132,7 +124,7 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
         msgLogin.setTypeMessage(TypeMessage.Login);
         msgLogin.setLogin(textBoxLogin.getText());
         msgLogin.setPassword(textBoxPass.getText());
-        msgService.getMessage((Message)msgLogin, parent);
+        parent.getMsgService().getMessage((Message)msgLogin, parent);
         buttonLogin.setHTML(parent.getAwesomeRefresh().toSafeHtml());
     }
     
@@ -155,28 +147,5 @@ public class PanelLogin extends SimplePanel implements AsyncCallback<Message> {
     
     private void updateButtons() {
         buttonLogin.setText(strLogin);
-    }
-    
-    @Override
-    public void onFailure(Throwable caught) {	
-        Window.alert("PanelLogin no response");	
-    }
-    @Override
-    public void onSuccess(Message result) {
-        if (result == null) {
-            Window.alert("PanelLogin: NULL");
-            return;
-        }
-        TypeMessage tm = result.getTypeMessage();
-        switch (tm) {
-            case Login:
-                break;
-            case Error:
-                MessageError error = (MessageError) result;
-                Window.alert("PanelLogin\n"
-                        + "CODE:" + error.getCode() + ";\n"
-                        + "DESC:" + error.getDescription() + ";");
-                break;
-        }
     }
 }

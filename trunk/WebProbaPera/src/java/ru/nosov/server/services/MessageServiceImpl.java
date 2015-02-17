@@ -12,6 +12,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.exception.GenericJDBCException;
 import ru.nosov.client.messages.Message;
+import ru.nosov.client.messages.MessageNews;
+import ru.nosov.client.messages.MessageNewsLine;
 import ru.nosov.client.messages.MessageService;
 import ru.nosov.client.messages.db.Users;
 import ru.nosov.client.messages.db.UsersTypes;
@@ -41,7 +43,8 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
         if (session.isNew()) {
             int interval = 60; //1min
             session.setMaxInactiveInterval(interval);
-            tm = TypeMessage.NewSession;
+            if (tm != TypeMessage.Login)
+                tm = TypeMessage.NewSession;
         }
         
 //        if (HttpSessionCollector.isInRange(session.getId())) {
@@ -66,6 +69,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
                 msgRx = (Message) ns;
                 break;
             case RqUser:
+                log.debug("RqUser");
                 Users userRqs = new Users();
                 userRqs.setStatus(false);
                 Object idRq = session.getAttribute("id");
@@ -88,6 +92,9 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
                         log.error("RqUser. Не верный идентификатор пользователя.");
                     }
                 }
+                
+                log.debug("RqUser " + userRqs.getId());
+                
                 msgRx = (Message) userRqs;
                 break;
             case Registration:
@@ -96,7 +103,15 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
                 break;
             case Login:
                 if (!(msg instanceof Users)) break;
-                msgRx = (Message) isAuthentication((Users) msg);
+                
+                Users uLogin = isAuthentication((Users) msg);
+                session.setAttribute("id", uLogin.getId());
+                session.setAttribute("login", uLogin.getLogin());
+                session.setAttribute("firstname", uLogin.getFirstname());
+                session.setAttribute("lastname", uLogin.getLastname());
+                session.setAttribute("email", uLogin.getEmail());
+                
+                msgRx = (Message) uLogin;
                 break;
             case Error:
                 msgRx = msg;
@@ -104,6 +119,10 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
             case isLoginName:
                 if (!(msg instanceof Users)) break;
                 msgRx = isLoginName((Users) msg);
+                break;
+            case RqNewsLine:
+                if (!(msg instanceof Message)) break;
+                msgRx = getNewsLine(session);
                 break;
             default:
 //                msgRx = (Message) getMsgError();
@@ -235,6 +254,33 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
         msgError.setCode(ErrorsMessage.WARNING_UNKNOWN_TYPE.getCode());
         msgError.setDescription(ErrorsMessage.WARNING_UNKNOWN_TYPE.getDescription());
         return msgError;
+    }
+    
+    /**
+     * Возвращает новости.
+     * @return список новостей
+     */
+    private Message getNewsLine(HttpSession s) {
+        MessageNewsLine mn = new MessageNewsLine();
+        mn.setTypeMessage(TypeMessage.RxNews);
+        Object email = s.getAttribute("email");
+        if (email == null) {
+            MessageNews news = new MessageNews();
+            news.setTypeMessage(TypeMessage.RxNews);
+            news.setNews("Новость дня! <b>Это работает!</b>");
+            mn.addNews(news);
+            return mn;
+        }
+        
+        mn.setUserName(s.getAttribute("email").toString());
+        for (int i=0; i<5; i++) {
+            MessageNews news = new MessageNews();
+            news.setTypeMessage(TypeMessage.RxNews);
+            news.setNews("<b>Новость с сервера №"+i+"</b><br>"
+                    + "&nbsp;&nbsp;&nbsp;Осталось " + (4-i) + " новостей! :)");
+            mn.addNews(news);
+        }
+        return mn;
     }
     
     private MessageError getMsgErrorRegistration() {

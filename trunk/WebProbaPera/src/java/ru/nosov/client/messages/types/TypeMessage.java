@@ -26,5 +26,11 @@ public enum TypeMessage {
     Registration,
     
     /** Проверка логина. */
-    isLoginName
+    isLoginName,
+    
+    /** Запрос новостной ленты. */
+    RqNewsLine,
+    
+    /** Информация новостной ленты. */
+    RxNews
 }

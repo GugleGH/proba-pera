@@ -30,13 +30,24 @@ h2 {
     margin-bottom: 0.5em;
 }
 
-a {
+.gwt-Anchor {
+    font-size: small;
     color: #0f6bdd; /* Ко всем ссылкам*/
-}
-
-.anchorRegistration {
+    text-decoration: none;
     display: inline-block;
-    padding: 10px;
+    padding: 2px 3px;
+}
+.gwt-Anchor:hover {
+    background:rgba(0,0,0,0.08);
+}
+.gwt-Anchor-Exit {
+    margin: 15px 20px 0px 3px;
+}
+.gwt-Anchor-Left {
+    width: 100%;
+}
+.gwt-Anchor-Up {
+    margin: 15px 0px 0px 3px;
 }
 
 .gwt-Button {
@@ -49,7 +60,7 @@ a {
     display: inline-block;
 }
 .gwt-Button:hover {
-    background:rgba(0,0,0,0.03);
+    background:rgba(0,0,0,0.1);
 }
 
 .gwt-TextBox {
