@@ -5,11 +5,17 @@
  */
 package ru.nosov.client.panels;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import ru.nosov.client.WelcomeEntryPoint;
+import ru.nosov.client.messages.MessageNews;
+import ru.nosov.client.messages.types.TypeMenu;
+import ru.nosov.client.messages.types.TypeMessage;
 
 /**
  * Панель с меню.
@@ -18,39 +24,121 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class PanelLeftMenu extends SimplePanel {
     
     // Variables declaration
-    /** Моя страница. */
-    private Label labelAboute;
-    /** Сообщения. */
-    private Label labelMessages;
-    /** Группы. */
-    private Label labelGoups;
-    /** Новости. */
-    private Label labelNews;
-    /** Настройки. */
-    private Label labelSettings;
+    private WelcomeEntryPoint parent;
+    
+//    /** Моя страница. */
+//    private Anchor anchorAboute;
+//    /** Сообщения. */
+//    private Anchor anchorMessages;
+//    /** Группы. */
+//    private Anchor anchorGoups;
+//    /** Новости. */
+//    private Anchor anchorNews;
+//    /** Настройки. */
+//    private Anchor anchorSettings;
     // End of variables declaration
     
     /**
      * Создает новую панель.
+     * @param parent родитель
      */
-    public PanelLeftMenu() {
+    public PanelLeftMenu(WelcomeEntryPoint parent) {
+        this.parent = parent;
+        initComponents();
+    }
+    
+    private void initComponents() {
         VerticalPanel panel = new VerticalPanel();
         panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
         panel.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
         panel.setWidth("100%");
         
-        labelAboute = new Label("Моя страница");
-        labelMessages = new Label("Мои сообщения");
-        labelGoups = new Label("Мои группы");
-        labelNews = new Label("Новости");
-        labelSettings = new Label("Настройки");
+        TypeMenu[] menus = TypeMenu.values();
+        for (final TypeMenu menu : menus) {
+            if ( (menu.getCode() < 100) && (menu.getCode() > 10) ) {
+                Anchor anchor = new Anchor(menu.getDescription());
+                anchor.addStyleName("gwt-Anchor-Left");
+                anchor.addClickHandler(new ClickHandler() {			
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        onClickAnchor(menu);
+                    }
+                });
+                panel.add(anchor);
+            }
+        }
         
-        panel.add(labelAboute);
-        panel.add(labelMessages);
-        panel.add(labelGoups);
-        panel.add(labelNews);
-        panel.add(labelSettings);
+//        anchorAboute = new Anchor("Моя страница");
+//        anchorMessages = new Anchor("Мои сообщения");
+//        anchorGoups = new Anchor("Мои группы");
+//        anchorNews = new Anchor("Новости");
+//        anchorSettings = new Anchor("Настройки");
+//        
+//        anchorAboute.addStyleName("gwt-Anchor-Left");
+//        anchorAboute.addClickHandler(new ClickHandler() {			
+//            @Override
+//            public void onClick(ClickEvent event) {
+//                onClick();
+//            }
+//        });
+//        
+//        anchorMessages.addStyleName("gwt-Anchor-Left");
+//        anchorMessages.addClickHandler(new ClickHandler() {			
+//            @Override
+//            public void onClick(ClickEvent event) {
+//                onClick();
+//            }
+//        });
+//        
+//        anchorGoups.addStyleName("gwt-Anchor-Left");
+//        anchorGoups.addClickHandler(new ClickHandler() {			
+//            @Override
+//            public void onClick(ClickEvent event) {
+//                onClick();
+//            }
+//        });
+//        
+//        anchorNews.addStyleName("gwt-Anchor-Left");
+//        anchorNews.addClickHandler(new ClickHandler() {			
+//            @Override
+//            public void onClick(ClickEvent event) {
+//                onClick();
+//            }
+//        });
+//        
+//        anchorSettings.addStyleName("gwt-Anchor-Left");
+//        anchorSettings.addClickHandler(new ClickHandler() {			
+//            @Override
+//            public void onClick(ClickEvent event) {
+//                onClick();
+//            }
+//        });
+//        
+//        panel.add(anchorAboute);
+//        panel.add(anchorMessages);
+//        panel.add(anchorGoups);
+//        panel.add(anchorNews);
+//        panel.add(anchorSettings);
         
         this.add(panel);
+    }
+
+    private void onClickAnchor(TypeMenu tm) {
+        if (parent == null) return;
+        switch (tm) {
+            case Aboute:
+                break;
+            case Messages:
+                break;
+            case Goups:
+                break;
+            case News:
+                MessageNews msgNews = new MessageNews();
+                msgNews.setTypeMessage(TypeMessage.RqNewsLine);
+                parent.getMsgService().getMessage(msgNews, parent);
+                break;
+            case Settings:
+                break;
+        }
     }
 }

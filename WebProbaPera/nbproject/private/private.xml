@@ -3,13 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/media/nosov/WorkDisk/java/GWT/ProbaPera/trunk/WebProbaPera/src/java/ru/nosov/client/utils/Utils.java</file>
             <file>file:/media/nosov/WorkDisk/java/GWT/ProbaPera/trunk/WebProbaPera/src/java/ru/nosov/client/WelcomeEntryPoint.java</file>
-            <file>file:/media/nosov/WorkDisk/java/GWT/ProbaPera/trunk/WebProbaPera/src/java/ru/nosov/client/messages/db/Users.java</file>
             <file>file:/media/nosov/WorkDisk/java/GWT/ProbaPera/trunk/WebProbaPera/src/java/ru/nosov/server/services/MessageServiceImpl.java</file>
-            <file>file:/media/nosov/WorkDisk/java/GWT/ProbaPera/trunk/WebProbaPera/src/java/ru/nosov/client/panels/PanelRegistration.java</file>
-            <file>file:/media/nosov/WorkDisk/java/GWT/ProbaPera/trunk/WebProbaPera/src/java/ru/nosov/server/db/tables/logic/UsersDAOImpl.java</file>
-            <file>file:/media/nosov/WorkDisk/java/GWT/ProbaPera/trunk/WebProbaPera/src/java/ru/nosov/server/db/tables/logic/UsersDAO.java</file>
+            <file>file:/media/nosov/WorkDisk/java/GWT/ProbaPera/trunk/WebProbaPera/src/java/ru/nosov/client/panels/PanelNewsLine.java</file>
         </group>
     </open-files>
 </project-private>

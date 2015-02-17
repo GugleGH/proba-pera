@@ -14,7 +14,7 @@ import ru.nosov.server.utils.I18N;
  */
 public enum ErrorsMessage {
 
-//    // Variables declaration
+    // Variables declaration
     /** Ошибка парсера JSON. */
     ERROR_JSON(0, "ERROR_JSON"),
     /** Не обрабатываемый тип сообщения. */
