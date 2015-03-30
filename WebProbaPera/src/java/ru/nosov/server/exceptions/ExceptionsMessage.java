@@ -8,19 +8,19 @@ package ru.nosov.server.exceptions;
 import ru.nosov.server.exceptions.errors.ErrorsMessage;
 
 /**
- * Исключения для соединения.
+ * Сообщение исключений.
  * @author Носов А.В.
  */
 public class ExceptionsMessage extends ExceptionMessage {
 
     // Variables declaration
-    /** Ошибка при работе с соединением. */
+    /** Сообщение ошибки. */
     private final ErrorsMessage error;
     // End of variables declaration
 
     /**
      * Конструктор исключения.
-     * @param error ошибка приработе с настройками
+     * @param error сообщение ошибки
      */
     public ExceptionsMessage(ErrorsMessage error) {
         super(error.getDescription());
@@ -28,8 +28,8 @@ public class ExceptionsMessage extends ExceptionMessage {
     }
 
     /**
-     * Возвращает ошибку при работе с настройками.
-     * @return ошибка при работе с настройками
+     * Возвращает ошибку.
+     * @return ошибка
      */
     public ErrorsMessage getError() {
         return error;

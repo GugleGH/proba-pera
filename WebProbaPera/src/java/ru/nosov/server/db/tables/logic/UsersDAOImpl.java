@@ -67,6 +67,8 @@ public class UsersDAOImpl implements UsersDAO {
         List users;
         try {
             session = HibernateSessionFactory.getSessionFactory().openSession();
+            if (session != null)
+                log.debug("Session is open");
             users = session.createCriteria(Users.class)
                     .add(Restrictions.like("login", login))
                     .add(Restrictions.like("password", pas)).list();

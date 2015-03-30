@@ -6,7 +6,7 @@
 package ru.nosov.server.exceptions;
 
 /**
- * Исключение при работе библиотеки.
+ * Сообщение исключения.
  * @author Носов А.В.
  */
 public class ExceptionMessage extends Exception {
